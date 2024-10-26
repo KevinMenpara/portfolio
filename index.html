@@ -177,14 +177,14 @@
 						for (let i = 0; i < text.length; i++) {
 							setTimeout(() => {
 							typingAnimationElement.textContent += text[i];
-							}, i * 200); // Increase the delay to slow down the typing animation
+							}, i * 100); // Increase the delay to slow down the typing animation
 						}
 
 						// Once the animation is complete, reset the text and start over
 						setTimeout(() => {
 							typingAnimationElement.textContent = '';
 							playTypingAnimation(typingTexts[(typingTexts.indexOf(text) + 1) % typingTexts.length]);
-						}, text.length * 200);
+						}, text.length * 100);
 						}
 
 						// Start the typing animation loop
@@ -277,14 +277,16 @@
 								<h1 class="big">About</h1>
 								<h2 class="mb-4">About Me</h2>
 								
-								<p>As a software engineer, I bring a strong foundation in various technical domains. My beginner-level experience spans web and app development, large language models (LLM) and prompt engineering, data structures and algorithms (DSA), and object-oriented programming (OOP). I am also knowledgeable in system architecture, Linux operations, and IT administration. Familiar with agile methodologies, I thrive in collaborative environments and have a keen interest in cryptography. Eager to apply my skills and continuously learn, I am enthusiastic about contributing to innovative projects and advancing my career in software engineering</p>
+								<p>B.Tech candidate at DA-IICT with a proven record in full-stack and secure system development.Led teams to build scalable registration and error resolving systems, boosting efficiency by 80%+ and enhancing security by 95% with AES-256 encryption. Skilled in C++, Python, and JavaScript, alongside DevOps tools like Docker and Kubernetes, I bring a results-driven approach to every project—whether optimizing workflows, enhancing data integrity, or delivering high-performance applications.</p>
 								<ul class="about-info mt-4 px-md-0 px-2">
-									<li class="d-flex"><span>Profile:</span> <span>Software Engineer</span></li>
+									<!-- <li class="d-flex"><span>Profile:</span> <span>Software Engineer</span></li> -->
 									<li class="d-flex"><span>Education:</span> <span>Bachelor of Technology</span></li>
+									<li class="d-flex"><span>Coursework:</span> <span>DSA, OOPs, OS, DBMS, SE, CN, Cloud, Cryptography</span></li>
 									<li class="d-flex"><span>Languages:</span> <span> Python, C/C++, SQL, HTML, CSS, JavaScript</span></li>
-									<li class="d-flex"><span>Tools:</span> <span>DBeaver, Vagrant, Tooljet, Robusta, Outlines, Langchain</span></li>
+									<li class="d-flex"><span>Tools:</span> <span> Git/GitHub, Docker, Kubernetes, Jenkins, AWS, DBeaver</span></li>
+									<li class="d-flex"><span>Techs:</span> <span>Django, Numpy, NodeJS, ReactJS, MongoDB, PostgreSQL, EKS</span></li>
 									<!-- <li class="d-flex"><span>Other Skills:</span> <span>Cloud, PyGame, Git/GitHub,Flask,</span></li> -->
-									<li class="d-flex"><span>Interest:</span> <span>Traveling, Sports, Books</span></li>
+									<li class="d-flex"><span>Interest:</span> <span>Learning, Traveling, Reading, Sports</span></li>
 									
 								</ul>
 							</div>
@@ -330,12 +332,12 @@
 					<div class="resume-wrap ftco-animate">
 						<span class="date">May 2023- July 2023</span>
 						<h2>Full Stack Developer Intern</h2>
-						<span class="position">Rovren</span>
+						<span class="position">Rovren Technology</span>
 						<p class="mt-4"> 
 							<ul>
-								<li>Developed a cross-platform website using Tooljet to facilitate registration and verification for RITA-India award ceremony.</li>
-								<li> Implemented PostgreSQL to manage user data, utilizing protocols such as HTTPS and encryption schemes like AES256 to ensure data integrity and privacy.</li>
-								<li>Leveraged AWS S3 for fast document retrieval and SMTP for automated notifications.</li>
+								<li> Developed the "RITAAwards" registration system using Tooljet, AWS S3, and SMTP, improving process efficiency for 1,000+ users.</li>
+								<li> Enhanced system security and data integrity, reducing data breaches by	95% using AES-256 encryption, ensuring reliable and private user registration and verification.</li>
+								<li> Created an admin interface allowing administrators tasks.</li>
 							</ul>
 						</p>
 					</div>
@@ -346,12 +348,12 @@
 					<div class="resume-wrap ftco-animate">
 						<span class="date">May 2024- July 2024</span>
 						<h2>Software Engineer Intern</h2>
-						<span class="position">Improwised</span>
+						<span class="position">Improwised Technology</span>
 						<p class="mt-4">
 							<ul>
-								<li>Developed an error resolving system (ERS) using Python to address infrastructure-level errors with the help of Large Language Models</li>
-								<li>Used SQLite to manage logs data, decorators and Flask servers for easy and fast access, gRPC for data integrity.</li>
-								<li>Leveraged LLM-proxy for robust communication, outlines for prompt generation, and message queue for loose coupling.</li>
+								<li> Developed an error resolving system (ERS) using Python and Large Language Models, enhancing	infrastructure level error resolution efficiency by 34%.</li>
+								<li> Leveraged LLM-proxy for robust communication, utilized outlines for prompt generation, and implemented a message queue for	loose coupling, improving system reliability by 70%.</li>
+								<li> Used open source administrative tools like Robusta & LLMs like Llama to ensure integrity and flexibility.</li>
 							</ul>
 						</p>
 					</div>
@@ -369,28 +371,28 @@
 		<br>
 		
 			<div class="row">
-    			<!-- <div class="col-md-6"> -->
+    			<div class="col-md-6">
     				<div class="resume-wrap ftco-animate">
-    					<span class="date">2021-present</span>
-    					<h2>Bachelor of Technology in Information &amp; Technology</h2>
-    					<span class="position">Dhirubhai Ambani Institute of Information and Communication Technology</span>
-    					<!-- <p class="mt-4">Grade: First class distinction.</p> -->
-    				<!-- </div> -->
+    					<span class="date">2021-2025</span>
+    					<h2>BTech in Information &amp; Technology</h2>
+    					<span class="position">DA-IICT</span>
+    					<p class="mt-4">Grade: First class distinction</p>
+    				</div>
     			</div>
-<!-- 
+
     			<div class="col-md-6">
     				<div class="resume-wrap ftco-animate">
     					<span class="date">2019-2021</span>
     					<h2>Higher Secondary School</h2>
-    					<span class="position">Army Public School</span>
+    					<span class="position">Lotus High School</span>
     					<p class="mt-4">Grade: First class distinction.</p>
     				</div>
-				</div> -->
+				</div>
     		</div>
 
     		<div class="row justify-content-center mt-5">
     			<div class="col-md-6 text-center ftco-animate">
-    				<p><a href="https://drive.google.com/file/d/11kc_0Sd0YEMU5vEzcA7TNWqoDfO4t-aK/view?usp=drive_link" class="btn btn-primary py-4 px-5" target="_blank">View CV</a></p>
+    				<p><a href="https://drive.google.com/file/d/1J0x_aiWE7SiEJq6S8lv_Ck1W_UPVqhhT/view?usp=sharing" class="btn btn-primary py-4 px-5" target="_blank">View CV</a></p>
     			</div>
     		</div>
     	</div>
@@ -404,40 +406,40 @@
           <div class="col-md-7 heading-section text-center ftco-animate">
             <h1 class="big big-2">Projects</h1>
             <h2 class="mb-4">Projects</h2>
-            <p>Below are the projects on SQL, Python, Web Development & Game Development.</p>
+            <p>Below are some classwork and personal projects showcasing my skills in development using Python & JS.</p>
           </div>
         </div>
         <div class="row d-flex">
           <div class="col-md-4 d-flex ftco-animate">
           	<div class="blog-entry justify-content-end">
-              <a href="https://github.com/KevinMenpara/Student-Registration-System/tree/main/SRS" class="block-20 zoom-effect" style="background-image: url('images/proj_1.jpg');" target="_blank">
+              <a href="https://srs.kmmenpara.xyz/" class="block-20 zoom-effect" style="background-image: url('images/srs.png');" target="_blank">
               </a>
               <div class="text mt-3 float-right d-block">
 
-                <h3 class="heading"><a href="https://github.com/KevinMenpara/Student-Registration-System/tree/main/SRS" target="_blank">Student Registration System Using Django</a></h3>
-                <p>Created a Student Registration System for colleges to ensure robust registration and verification of online exams.</p>
+                <h3 class="heading"><a href="https://srs.kmmenpara.xyz/" target="_blank">SRS Using Python</a></h3>
+                <p>A Django based Student Registration System for colleges to ensure robust registration and verification of online exams.</p>
               </div>
             </div>
           </div>
           <div class="col-md-4 d-flex ftco-animate">
           	<div class="blog-entry justify-content-end">
-              <a href="https://github.com/KevinMenpara/D-Digital-Screen-for-Washing-Machine" class="block-20 zoom-effect" style="background-image: url('images/proj_2.jpg');" target="_blank">
+              <a href="https://placebook.kmmenpara.xyz/" class="block-20 zoom-effect" style="background-image: url('images/placebook.png');" target="_blank">
               </a>
               <div class="text mt-3 float-right d-block">
 
-                <h3 class="heading"><a href="https://github.com/KevinMenpara/D-Digital-Screen-for-Washing-Machine" target="_blank">Digital Screen of Washing Machine for Elders</a></h3>
-                <p>A static web app describing basic layout and functionality of digital screen for washing machine which can be efficiently used by elderly people.</p>
+                <h3 class="heading"><a href="https://placebook.kmmenpara.xyz/" target="_blank">Placebook using JS</a></h3>
+                <p>An MERN web application which enables users to share images & locations of different places for travel enthusiasts.</p>
               </div>
             </div>
           </div>
           <div class="col-md-4 d-flex ftco-animate">
           	<div class="blog-entry">
-              <a href="https://github.com/KevinMenpara/2D-Game-Alian-Invasion-" class="block-20 zoom-effect" style="background-image: url('images/proj_3.jpg');" target="_blank">
+              <a href="https://paymentapi.kmmenpara.xyz/api/v1/" class="block-20 zoom-effect" style="background-image: url('images/payment.png');" target="_blank">
               </a>
               <div class="text mt-3 float-right d-block">
 
-                <h3 class="heading"><a href="https://github.com/KevinMenpara/2D-Game-Alian-Invasion-" target="_blank">2D Game - Alian Invasion Using PyGame</a></h3>
-                <p>A level based alians-shooting 2D game with help of Pygame.</p>
+                <h3 class="heading"><a href="https://paymentapi.kmmenpara.xyz/api/v1/" target="_blank">PayMe using Python</a></h3>
+                <p>A Django based cross functional webapp which acts a fully-functional payment gateway for any other projects.</p>
               </div>
             </div>
           </div>
@@ -451,8 +453,8 @@
 				</a>
 				<div class="text mt-3 float-right d-block">
   
-				  <h3 class="heading"><a href="https://github.com/KevinMenpara/Learning-Log" target="_blank">Learning Log - Your Personal Knowledge Tracker</a></h3>
-				  <p>A web app called Learning Log that allows users to log the topics they are interested in and to make journal entries as they learn about each topic.</p>
+				  <h3 class="heading"><a href="https://github.com/KevinMenpara/Learning-Log" target="_blank">Learning Log - 	Your Personal Knowledge Tracker using Python</a></h3>
+				  <p>A Django web app that allows users to make journal entries as they learn about each topic.</p>
 				</div>
 			  </div>
 			</div>
