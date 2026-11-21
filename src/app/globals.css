@@ -1,0 +1,127 @@
+@import "tailwindcss";
+@import "@fontsource-variable/bricolage-grotesque/opsz.css";
+@import "@fontsource-variable/jetbrains-mono/index.css";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+  Concept: the journey is a git history. One "main" line runs down the page;
+  chapters are commits on it, projects are coloured branches that fork off
+  and merge back. Branch colours identify a project everywhere it appears.
+
+  paper   page             ink    text and the main line
+  muted   secondary text   rule   hairlines and the undrawn line
+  lift    raised surfaces  blue / green / amber / violet / rose  branches
+*/
+:root {
+  --paper: #f3f3ef;
+  --lift: #fbfbf9;
+  --ink: #1a1c21;
+  --muted: #62666f;
+  --rule: #d8d8d1;
+  --blue: #2f62e6;
+  --green: #12875a;
+  --amber: #c26a0a;
+  --violet: #7d4ad6;
+  --rose: #d23c6e;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --paper: #111216;
+  --lift: #191b21;
+  --ink: #ecebe6;
+  --muted: #9a9ca5;
+  --rule: #2b2d35;
+  --blue: #7c9dff;
+  --green: #4fd09a;
+  --amber: #f2a54a;
+  --violet: #b593ff;
+  --rose: #ff7fa6;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-lift: var(--lift);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-blue: var(--blue);
+  --color-green: var(--green);
+  --color-amber: var(--amber);
+  --color-violet: var(--violet);
+  --color-rose: var(--rose);
+  --font-sans: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, Menlo, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-optical-sizing: auto;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Bricolage at its largest optical size: the expressive cut. */
+.display {
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+}
+
+/* The main line draws itself as you scroll the journey (--drawn: 0..1). */
+.mainline {
+  background: linear-gradient(var(--ink), var(--ink)) top / 2px calc(var(--drawn, 0) * 100%) no-repeat,
+    repeating-linear-gradient(var(--rule) 0 6px, transparent 6px 12px) top / 2px 100% no-repeat;
+}
+
+/* Expandable chapter details. */
+.expand {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.expand[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+.expand > div {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .mainline {
+    --drawn: 1 !important;
+  }
+  .expand {
+    transition: none;
+  }
+}
