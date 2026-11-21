@@ -4,7 +4,7 @@ import { Journey } from "@/components/Journey";
 import { JourneyOverview } from "@/components/JourneyOverview";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { journey, notes, profile, projects, services, skills } from "@/content/profile";
+import { journey, notes, profile, projects, services, skills, testimonials } from "@/content/profile";
 import { branch } from "@/lib/branch";
 
 const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
@@ -15,7 +15,7 @@ const pillLine = "rounded-full border border-ink/25 px-6 py-3 font-semibold tran
 export default function Home() {
   return (
     <>
-      <SiteHeader name={profile.name} resumeUrl={profile.resumeUrl} />
+      <SiteHeader name={profile.name} />
       <main>
         <Hero />
 
@@ -25,6 +25,7 @@ export default function Home() {
         </section>
 
         <Projects />
+        <Testimonials />
         <WhereNext />
 
         <section id="contact" aria-labelledby="contact-h" className={`${shell} py-20 sm:py-28`}>
@@ -57,12 +58,12 @@ function Hero() {
           {profile.role} in {profile.location.split(",")[0]}. {profile.promise}
         </p>
         <div className="flex flex-wrap gap-3 lg:justify-end">
-          <a href="#journey" className={pillDark}>
+          <a href="#journey" className={pillDark} data-goatcounter-click="hero-journey">
             Follow the journey
           </a>
-          <a href={profile.resumeUrl} {...ext} className={pillLine}>
+          <Link href="/resume/" className={pillLine} data-goatcounter-click="hero-resume">
             Skip to résumé
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -88,7 +89,7 @@ function Projects() {
                   <span aria-hidden="true" className={`mt-2 h-auto w-[3px] shrink-0 rounded-full ${c.bg}`} />
                   <span className="min-w-0">
                     <span className={`block font-mono text-sm ${c.text}`}>
-                      feature/{p.slug} <span className="text-muted">({p.year})</span>
+                      {p.kind === "work" ? `main, at ${p.company}` : `feature/${p.slug}`} <span className="text-muted">({p.year})</span>
                     </span>
                     <span className="mt-1 block text-2xl font-semibold tracking-tight group-hover:underline">{p.title}</span>
                     <span className="mt-2 block text-muted">{p.summary}</span>
@@ -121,6 +122,27 @@ function Projects() {
   );
 }
 
+function Testimonials() {
+  if (testimonials.length === 0) return null;
+  return (
+    <section aria-labelledby="said-h" className={`${shell} pt-20 sm:pt-28`}>
+      <SectionHead id="said-h" title="What people say" note="From the people I've built things with." />
+      <ul className={`grid gap-10 ${testimonials.length > 1 ? "lg:grid-cols-2" : ""}`}>
+        {testimonials.map((t) => (
+          <li key={t.name}>
+            <figure className="border-l-2 border-ink pl-6">
+              <blockquote className="text-xl leading-snug sm:text-2xl">{t.quote}</blockquote>
+              <figcaption className="mt-4 text-muted">
+                <span className="font-semibold text-ink">{t.name}</span>, {t.role} at {t.company}
+              </figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 function WhereNext() {
   const apps = projects.filter((p) => p.live);
   const rows = [
@@ -129,9 +151,9 @@ function WhereNext() {
       a: "The résumé has the full picture, LinkedIn has references and the rest.",
       actions: (
         <>
-          <a href={profile.resumeUrl} {...ext} className={pillDark}>
+          <Link href="/resume/" className={pillDark} data-goatcounter-click="next-resume">
             Open résumé
-          </a>
+          </Link>
           <a href={profile.socials.linkedin} {...ext} className={pillLine}>
             LinkedIn
           </a>
@@ -142,7 +164,7 @@ function WhereNext() {
       q: "Need something built?",
       a: services.map((s) => s.title).join(", ") + ".",
       actions: (
-        <a href="#contact" className={pillDark}>
+        <a href="#contact" className={pillDark} data-goatcounter-click="next-project">
           Tell me about it
         </a>
       ),

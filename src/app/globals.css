@@ -125,3 +125,23 @@ h3 {
     transition: none;
   }
 }
+
+/* Print (the résumé page): always light, plain white paper. */
+@media print {
+  :root,
+  [data-theme="dark"] {
+    --paper: #ffffff;
+    --lift: #ffffff;
+    --ink: #111318;
+    --muted: #4b4f58;
+    --rule: #cfcfcf;
+    color-scheme: light;
+  }
+  body {
+    font-size: 10pt;
+    line-height: 1.45;
+  }
+  @page {
+    margin: 12mm 14mm;
+  }
+}

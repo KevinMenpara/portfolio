@@ -96,18 +96,28 @@ export function Journey({ chapters, projects }: Props) {
                   </p>
                 )}
 
+                <div className="mt-5 flex flex-wrap gap-3">
                 <button
                   type="button"
                   aria-expanded={isOpen}
                   aria-controls={`${c.id}-details`}
                   onClick={() => setOpen((o) => ({ ...o, [c.id]: !isOpen }))}
-                  className="mt-5 inline-flex items-center gap-2 rounded-full border border-rule px-4 py-1.5 text-[15px] font-medium transition hover:border-ink/40"
+                  className="inline-flex items-center gap-2 rounded-full border border-rule px-4 py-1.5 text-[15px] font-medium transition hover:border-ink/40"
                 >
                   <span aria-hidden="true" className={`inline-block transition-transform ${isOpen ? "rotate-45" : ""}`}>
                     +
                   </span>
                   {isOpen ? "Hide the details" : "Read the details"}
                 </button>
+                {c.caseStudy && (
+                  <Link
+                    href={`/work/${c.caseStudy}/`}
+                    className="inline-flex items-center rounded-full bg-ink px-4 py-1.5 text-[15px] font-medium text-paper transition hover:opacity-85"
+                  >
+                    Read the case study
+                  </Link>
+                )}
+                </div>
 
                 <div id={`${c.id}-details`} className="expand" data-open={isOpen}>
                   <div>

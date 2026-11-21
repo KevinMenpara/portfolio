@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 import { CloseIcon, MenuIcon } from "./icons";
 
-type Props = { name: string; resumeUrl: string; onHome?: boolean };
+type Props = { name: string; onHome?: boolean };
 
-export function SiteHeader({ name, resumeUrl, onHome = true }: Props) {
+export function SiteHeader({ name, onHome = true }: Props) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -48,14 +48,13 @@ export function SiteHeader({ name, resumeUrl, onHome = true }: Props) {
         </ul>
 
         <div className="flex items-center gap-2">
-          <a
-            href={resumeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/resume/"
+            data-goatcounter-click="header-resume"
             className="hidden rounded-full bg-ink px-4 py-1.5 text-sm font-semibold text-paper transition hover:opacity-85 sm:inline-block"
           >
             Résumé
-          </a>
+          </Link>
           <ThemeToggle />
           <button
             type="button"
@@ -80,9 +79,9 @@ export function SiteHeader({ name, resumeUrl, onHome = true }: Props) {
             </li>
           ))}
           <li>
-            <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="block py-2 font-semibold">
+            <Link href="/resume/" onClick={() => setOpen(false)} className="block py-2 font-semibold">
               Résumé
-            </a>
+            </Link>
           </li>
         </ul>
       )}

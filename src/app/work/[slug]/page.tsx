@@ -27,7 +27,8 @@ export default async function CaseStudy({ params }: Params) {
   if (!p) notFound();
 
   const c = branch[p.color];
-  const chapter = journey.find((ch) => ch.projects?.includes(p.slug));
+  const chapter = journey.find((ch) => ch.projects?.includes(p.slug) || ch.caseStudy === p.slug);
+  const isWork = p.kind === "work";
   const i = projects.findIndex((x) => x.slug === p.slug);
   const next = projects[(i + 1) % projects.length];
   const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
@@ -35,7 +36,7 @@ export default async function CaseStudy({ params }: Params) {
 
   return (
     <>
-      <SiteHeader name={profile.name} resumeUrl={profile.resumeUrl} onHome={false} />
+      <SiteHeader name={profile.name} onHome={false} />
       <main className="mx-auto max-w-6xl px-5 pb-24 pt-28 sm:px-8 sm:pt-36">
         <Link href="/#work" className={`text-muted ${link}`}>
           All projects
@@ -47,11 +48,11 @@ export default async function CaseStudy({ params }: Params) {
           <span aria-hidden="true" className={`absolute left-0 top-1 size-[17px] rounded-full border-[3px] bg-paper ${c.border}`} />
 
           <p className={`font-mono text-sm ${c.text}`}>
-            feature/{p.slug}
+            {isWork ? `main, at ${p.company}` : `feature/${p.slug}`}
             {chapter && (
               <span className="text-muted">
                 {" "}
-                branched from main in{" "}
+                {isWork ? "in" : "branched from main in"}{" "}
                 <Link href={`/#${chapter.id}`} className={link}>
                   {chapter.year}
                 </Link>
@@ -85,6 +86,27 @@ export default async function CaseStudy({ params }: Params) {
             )}
           </div>
 
+          {p.diagram && (
+            <figure className="mt-14 rounded-2xl border border-rule bg-lift p-6 sm:p-8">
+              <figcaption className="text-xl font-semibold tracking-tight">{p.diagram.title}</figcaption>
+              <ol className="mt-6 grid gap-x-4 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+                {p.diagram.steps.map((step, n) => (
+                  <li key={step.name} className="relative flex gap-3">
+                    <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-ink font-mono text-xs font-semibold text-paper">
+                      {n + 1}
+                    </span>
+                    <span>
+                      <span className="block font-semibold">
+                        {step.name}
+                      </span>
+                      <span className="block text-[15px] text-muted">{step.detail}</span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </figure>
+          )}
+
           {p.image && (
             <div className="mt-14 overflow-hidden rounded-2xl border border-rule bg-lift">
               <Image src={p.image} alt={`Screenshot of ${p.title}`} sizes="(min-width: 1152px) 1040px, 100vw" className="h-auto w-full" priority />
@@ -113,7 +135,7 @@ export default async function CaseStudy({ params }: Params) {
             </section>
           </div>
 
-          <p className={`mt-14 font-mono text-sm ${c.text}`}>Merged into main</p>
+          <p className={`mt-14 font-mono text-sm ${c.text}`}>{isWork ? `Shipped at ${p.company}` : "Merged into main"}</p>
           <span aria-hidden="true" className={`absolute -bottom-1 left-0 size-[17px] rounded-full border-[3px] border-ink bg-ink`} />
         </div>
 

@@ -31,15 +31,21 @@ export type Chapter = {
   changes: Change[];
   /** One standout figure for the chapter. */
   metric?: { value: string; label: string };
-  /** Slugs from `projects` built during this chapter. */
+  /** Case study for the work done in this chapter (a "work" project slug). */
+  caseStudy?: string;
+  /** Slugs of personal projects built during this chapter; drawn as branches. */
   projects?: string[];
 };
 
 /** Each project's branch colour, used everywhere the project appears. */
-export type BranchColor = "blue" | "green" | "amber" | "violet" | "rose";
+export type BranchColor = "main" | "blue" | "green" | "amber" | "violet" | "rose";
 
 export type Project = {
   slug: string;
+  /** "work" projects happened at a company and sit on the main line; "personal" ones are branches. */
+  kind: "work" | "personal";
+  /** For work projects: the company. */
+  company?: string;
   color: BranchColor;
   title: string;
   year: string;
@@ -48,6 +54,8 @@ export type Project = {
   image?: StaticImageData;
   live?: string;
   source?: string;
+  /** Optional architecture diagram on the case-study page. */
+  diagram?: { title: string; steps: { name: string; detail: string; assumed?: boolean }[] };
   /** Case-study page. */
   problem: string;
   approach: string[];
@@ -56,6 +64,7 @@ export type Project = {
 
 export type Service = { title: string; body: string; stack: string[] };
 export type Note = { title: string; href: string; date: string; summary: string };
+export type Testimonial = { quote: string; name: string; role: string; company: string };
 
 /* ───────────────────────── Profile ───────────────────────── */
 
@@ -79,6 +88,10 @@ export const profile = {
    * Left empty, the contact form opens the visitor's email app instead.
    */
   contactEndpoint: "",
+  /** Résumé PDF in /public. The download button appears once the file exists. */
+  resumePdf: "resume.pdf",
+  /** Privacy-friendly analytics. Set your GoatCounter code (e.g. "kmenpara") to switch it on. */
+  analytics: { goatcounter: "" },
 };
 
 /* ───────────────────────── Journey ───────────────────────── */
@@ -110,7 +123,7 @@ export const journey: Chapter[] = [
       { kind: "led", text: "Batch representative and event coordinator" },
       { kind: "added", text: "First full-stack projects in Django and the MERN stack" },
     ],
-    projects: ["learning-log"],
+    projects: ["learning-log", "srs"],
   },
   {
     id: "rovren",
@@ -127,6 +140,7 @@ export const journey: Chapter[] = [
       { kind: "added", text: "Admin interface for managing registrations" },
     ],
     metric: { value: "1,000+", label: "users registered through the platform" },
+    caseStudy: "rita-awards",
     projects: ["placebook", "payme"],
   },
   {
@@ -143,7 +157,8 @@ export const journey: Chapter[] = [
       { kind: "added", text: "Integrated Robusta and open models like Llama" },
     ],
     metric: { value: "34%", label: "faster infrastructure error resolution" },
-    projects: ["version-control", "srs"],
+    caseStudy: "ers",
+    projects: ["version-control"],
   },
   {
     id: "graduate",
@@ -161,12 +176,12 @@ export const journey: Chapter[] = [
     id: "now",
     year: "Now",
     when: "2026",
-    title: "What I'm doing now",
+    title: "What's next",
     place: "Rajkot, India",
-    summary: "Software engineer on backend and infrastructure systems, open to new work.", // ASSUMED
+    summary: "Focused on backend, infrastructure and LLM tooling, and open to new work.", // ASSUMED
     // ASSUMED: replace with your current role, company and focus.
     story:
-      "Working as a software engineer on backend and infrastructure systems, and exploring how LLMs can make operations calmer. I'm open to new roles, freelance projects and good conversations.",
+      "After graduating I've kept building on what the internships taught me: backend systems, infrastructure, and using LLMs to make operations calmer. I'm open to full-time roles, freelance projects and conversations with early-stage teams.",
     changes: [],
   },
 ];
@@ -175,7 +190,61 @@ export const journey: Chapter[] = [
 
 export const projects: Project[] = [
   {
+    slug: "ers",
+    kind: "work",
+    company: "Improwised Technology",
+    color: "main",
+    title: "Error-resolving system",
+    year: "2024",
+    summary: "An LLM-powered system that diagnoses infrastructure errors and suggests fixes, 34% faster than before.",
+    stack: ["Python", "LLMs", "Llama", "Outlines", "Robusta", "Message queue", "Kubernetes"],
+    diagram: {
+      title: "How an error gets resolved",
+      steps: [
+        { name: "Kubernetes cluster", detail: "A workload fails or misbehaves." },
+        { name: "Robusta", detail: "Picks up the alert and collects context from the cluster." },
+        { name: "Message queue", detail: "Decouples alert intake from analysis, so bursts don't drop errors." },
+        { name: "ERS workers", detail: "Python services that build the diagnosis request." },
+        { name: "Outlines", detail: "Generates structured prompts and constrains the model's output." },
+        { name: "LLM proxy", detail: "One reliable gateway for model traffic, with retries and routing." },
+        { name: "Llama", detail: "Open model that proposes the likely cause and fix." },
+        { name: "Suggested fix", detail: "Returned to the on-call engineer alongside the alert.", assumed: true },
+      ],
+    },
+    // ASSUMED: the problem framing and the final delivery step. Correct them from your experience.
+    problem:
+      "Infrastructure alerts arrive faster than engineers can investigate them, and many failures are variations of problems the team has already solved. Diagnosing each one by hand slows down recovery.",
+    approach: [
+      "Built the error-resolving system (ERS) in Python, using large language models to diagnose infrastructure-level errors.",
+      "Routed all model traffic through an LLM proxy for robust, consistent communication with the models.",
+      "Used Outlines to generate structured prompts, so the model's answers came back in a predictable shape.",
+      "Put a message queue between alert intake and analysis for loose coupling, which improved reliability by 70%.",
+      "Integrated open-source tooling: Robusta for Kubernetes alerting and context, and open models like Llama.",
+    ],
+    outcome: "Infrastructure-level errors were resolved 34% faster, and the system was 70% more reliable thanks to the queue-based design.",
+  },
+  {
+    slug: "rita-awards",
+    kind: "work",
+    company: "Rovren Technology",
+    color: "main",
+    title: "RITAAwards registration",
+    year: "2023",
+    summary: "A secure registration and verification platform for an awards programme, used by 1,000+ people.",
+    stack: ["ToolJet", "AWS S3", "SMTP", "AES-256"],
+    // ASSUMED: the problem framing. Add who the awards were for and the timeline.
+    problem:
+      "An awards programme needed to register and verify more than a thousand applicants, and their personal details had to stay private.",
+    approach: [
+      "Built the RITAAwards registration system with ToolJet, storing uploads in AWS S3 and sending verification through SMTP.",
+      "Encrypted sensitive data with AES-256, reducing data-breach risk by 95%.",
+      "Created an admin interface so the organisers could review registrations and handle administrative tasks.",
+    ],
+    outcome: "A reliable, private registration process that handled 1,000+ users and made the organisers' work faster.",
+  },
+  {
     slug: "srs",
+    kind: "personal",
     color: "blue",
     title: "Student Registration System",
     year: "2024", // ASSUMED year
@@ -195,6 +264,7 @@ export const projects: Project[] = [
   },
   {
     slug: "placebook",
+    kind: "personal",
     color: "green",
     title: "Placebook",
     year: "2023", // ASSUMED year
@@ -213,6 +283,7 @@ export const projects: Project[] = [
   },
   {
     slug: "payme",
+    kind: "personal",
     color: "amber",
     title: "PayMe",
     year: "2023", // ASSUMED year
@@ -230,6 +301,7 @@ export const projects: Project[] = [
   },
   {
     slug: "learning-log",
+    kind: "personal",
     color: "violet",
     title: "Learning Log",
     year: "2022", // ASSUMED year
@@ -246,6 +318,7 @@ export const projects: Project[] = [
   },
   {
     slug: "version-control",
+    kind: "personal",
     color: "rose",
     title: "Version Control System",
     year: "2024", // ASSUMED year (built for Winter of Code 6.0)
@@ -284,8 +357,25 @@ export const services: Service[] = [
   },
 ];
 
+/**
+ * Quotes from people you've worked with. The section appears once there is at
+ * least one. Example:
+ * { quote: "…", name: "Jane Doe", role: "Engineering lead", company: "Improwised Technology" }
+ */
+export const testimonials: Testimonial[] = [];
+
 /** Add posts here; the notes section appears once there is at least one. */
 export const notes: Note[] = [];
+
+export const education = [
+  {
+    title: "B.Tech in Information & Technology",
+    place: "DA-IICT, Gandhinagar",
+    when: "2021 – 2025",
+    detail: "First class with distinction. Batch representative and event coordinator.",
+  },
+  { title: "Higher secondary", place: "Lotus High School", when: "2019 – 2021", detail: "First class with distinction." },
+];
 
 export const skills = {
   Languages: ["Python", "C/C++", "JavaScript", "SQL"],
