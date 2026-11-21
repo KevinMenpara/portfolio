@@ -1,18 +1,20 @@
 # Kevin Menpara — Portfolio
 
-Personal portfolio built with **Next.js** (App Router, static export), **TypeScript** and **Tailwind CSS**, deployed to **GitHub Pages**.
+Personal portfolio and landing page, told as a journey (school → DA-IICT → internships → now). Built with **Next.js** (App Router, static export), **TypeScript** and **Tailwind CSS**, deployed to **GitHub Pages**.
 
 Live: https://kevinmenpara.github.io/portfolio/
 
 ## Updating content
 
-All text, links, experience, projects and skills live in one file:
+All text lives in one file: the journey chapters, projects and their case studies, services, notes, skills and links.
 
 ```
 src/content/profile.ts
 ```
 
 Edit it, commit, and push to `main` — the site rebuilds and deploys automatically.
+Placeholder text written during the redesign is marked `ASSUMED`; search for it and replace it with your own story. Notes appear on the site once `notes` has at least one entry. To make the contact form send messages directly, set `contactEndpoint` (e.g. a Formspree URL); otherwise it opens the visitor's email app.
+
 Project screenshots go in `src/assets/projects/` (WebP, ~1200px wide) and are imported at the top of `profile.ts`.
 
 ## Development
@@ -29,7 +31,8 @@ npm run typecheck
 ```
 src/
   app/          layout (metadata, theme), page (all sections), global styles, favicon
-  components/   Nav, ThemeToggle, Typewriter, Reveal, Section, icons
+  app/work/     one case-study page per project
+  components/   SiteHeader, Journey, ContactForm, SiteFooter, ThemeToggle, icons
   content/      profile.ts — the site's content
   assets/       images imported by the content file
 .github/workflows/deploy.yml   build + deploy to GitHub Pages

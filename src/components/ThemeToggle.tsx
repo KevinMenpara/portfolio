@@ -19,7 +19,7 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label="Toggle color theme"
-      className="grid size-9 place-items-center rounded-full border border-border text-muted transition hover:text-fg hover:border-fg/30"
+      className="grid size-9 place-items-center rounded-full border border-rule text-muted transition hover:text-ink hover:border-ink/30"
     >
       {/* Both icons render; CSS picks one so server HTML matches any theme. */}
       <SunIcon className="hidden dark:block" />

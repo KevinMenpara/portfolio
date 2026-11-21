@@ -1,147 +1,283 @@
 /**
- * All site content lives here. Edit this file to update the portfolio —
- * no component changes needed.
+ * All site content lives here. Edit this file to update the site; no
+ * component changes are needed.
+ *
+ * Anything marked `ASSUMED` was written as a sensible placeholder during the
+ * redesign. Search for "ASSUMED" and replace it with the real story.
  */
 import type { StaticImageData } from "next/image";
 import srs from "@/assets/projects/srs.webp";
 import placebook from "@/assets/projects/placebook.webp";
 import payme from "@/assets/projects/payme.webp";
 
-export type Link = { label: string; href: string };
+/* ───────────────────────── Types ───────────────────────── */
 
-export type Experience = {
-  role: string;
-  company: string;
-  period: string;
-  highlights: string[];
-  stack?: string[];
+export type Change = {
+  kind: "added" | "faster" | "safer" | "steadier" | "led";
+  text: string;
+};
+
+export type Chapter = {
+  id: string;
+  /** Big pinned label in the journey: a year, or "Now". */
+  year: string;
+  /** Exact dates shown in the chapter. */
+  when: string;
+  title: string;
+  place: string;
+  story: string;
+  changes: Change[];
+  /** One standout figure for the chapter. */
+  metric?: { value: string; label: string };
+  /** Slugs from `projects` built during this chapter. */
+  projects?: string[];
 };
 
 export type Project = {
+  slug: string;
   title: string;
-  description: string;
-  tags: string[];
+  year: string;
+  summary: string;
+  stack: string[];
   image?: StaticImageData;
   live?: string;
   source?: string;
+  /** Case-study page. */
+  problem: string;
+  approach: string[];
+  outcome: string;
 };
 
-export type Education = {
-  degree: string;
-  school: string;
-  period: string;
-  note?: string;
-};
+export type Service = { title: string; body: string; stack: string[] };
+export type Note = { title: string; href: string; date: string; summary: string };
+
+/* ───────────────────────── Profile ───────────────────────── */
 
 export const profile = {
   name: "Kevin Menpara",
-  title: "Software Engineer",
-  /** Rotating phrases shown under the name in the hero. */
-  roles: ["Software Engineer", "Full-Stack Developer", "DevOps & Cloud"],
+  role: "Software engineer",
+  promise:
+    "I build secure systems and the tooling that keeps infrastructure running, from LLM-powered incident fixes to apps used by a thousand people.",
   location: "Rajkot, Gujarat, India",
   email: "kevinmenpara2208@gmail.com",
   phone: "+91 91068 02005",
-  /** Short line for the hero and the page's meta description. */
-  tagline:
-    "I build secure, scalable web systems — from full-stack apps to LLM-powered infrastructure tooling.",
-  about: [
-    "I'm a software engineer from DA-IICT with a record in full-stack and secure system development. I've led teams building scalable registration and error-resolution systems, improving efficiency by 80%+ and hardening security with AES-256 encryption.",
-    "I work mostly in Python, C++ and JavaScript, alongside DevOps tooling like Docker and Kubernetes, and I care about clean workflows, data integrity and fast applications.",
-  ],
-  resumeUrl:
-    "https://drive.google.com/file/d/1J0x_aiWE7SiEJq6S8lv_Ck1W_UPVqhhT/view?usp=sharing",
+  /** Set to false to hide the phone number on the site. */
+  showPhone: true,
+  resumeUrl: "https://drive.google.com/file/d/1J0x_aiWE7SiEJq6S8lv_Ck1W_UPVqhhT/view?usp=sharing",
   socials: {
     github: "https://github.com/KevinMenpara",
     linkedin: "https://www.linkedin.com/in/kevin-menpara-b7379322a/",
   },
-  contactFormUrl: "https://forms.gle/1tfteRZynBhFrqQb6",
+  /**
+   * Optional form backend (e.g. a Formspree or Web3Forms endpoint URL).
+   * Left empty, the contact form opens the visitor's email app instead.
+   */
+  contactEndpoint: "",
 };
 
-export const skills: Record<string, string[]> = {
-  Languages: ["Python", "C/C++", "JavaScript", "SQL", "HTML", "CSS"],
-  Frameworks: ["Django", "React", "Node.js", "NumPy"],
-  "Data & Cloud": ["PostgreSQL", "MongoDB", "AWS", "EKS"],
-  Tooling: ["Git", "Docker", "Kubernetes", "Jenkins", "DBeaver"],
-  Coursework: ["DSA", "OOP", "Operating Systems", "DBMS", "Networks", "Cryptography", "Cloud"],
-};
+/* ───────────────────────── Journey ───────────────────────── */
 
-export const experience: Experience[] = [
+export const journey: Chapter[] = [
   {
-    role: "Software Engineer Intern",
-    company: "Improwised Technology",
-    period: "May 2024 – Jul 2024",
-    highlights: [
-      "Built an error-resolving system (ERS) with Python and large language models, improving infrastructure-level error resolution efficiency by 34%.",
-      "Used an LLM proxy for robust communication, Outlines for prompt generation and a message queue for loose coupling — improving system reliability by 70%.",
-      "Integrated open-source tooling like Robusta and LLMs like Llama for integrity and flexibility.",
-    ],
-    stack: ["Python", "LLMs", "Kubernetes", "Robusta"],
+    id: "school",
+    year: "2019",
+    when: "2019 – 2021",
+    title: "Higher secondary",
+    place: "Lotus High School",
+    // ASSUMED: story wording. Add how you first got into programming.
+    story:
+      "Finished school with a first-class distinction and decided to study technology. This is where the curiosity about how software works started.",
+    changes: [{ kind: "added", text: "First class with distinction" }],
   },
   {
-    role: "Full Stack Developer Intern",
-    company: "Rovren Technology",
-    period: "May 2023 – Jul 2023",
-    highlights: [
-      "Developed the “RITAAwards” registration system using ToolJet, AWS S3 and SMTP, streamlining the process for 1,000+ users.",
-      "Reduced data-breach risk by 95% with AES-256 encryption, keeping registration and verification private and reliable.",
-      "Built an admin interface for managing registrations and administrative tasks.",
+    id: "da-iict",
+    year: "2021",
+    when: "2021 – 2025",
+    title: "B.Tech at DA-IICT",
+    place: "DA-IICT, Gandhinagar",
+    // ASSUMED: story wording; add hackathons, Winter of Code and other turning points.
+    story:
+      "Four years of computer science foundations: data structures, operating systems, databases, networks, cloud and cryptography. I built my first Django apps here and learned to lead as well as code.",
+    changes: [
+      { kind: "led", text: "Batch representative and event coordinator" },
+      { kind: "added", text: "First full-stack projects in Django and the MERN stack" },
     ],
-    stack: ["ToolJet", "AWS S3", "SMTP", "AES-256"],
+    projects: ["learning-log"],
+  },
+  {
+    id: "rovren",
+    year: "2023",
+    when: "May – Jul 2023",
+    title: "Full-stack developer intern",
+    place: "Rovren Technology",
+    story:
+      "My first production system: the RITAAwards registration platform, built with ToolJet, AWS S3 and SMTP. Real users, real data, and a real need to keep it secure.",
+    changes: [
+      { kind: "added", text: "Registration and verification flow, end to end" },
+      { kind: "safer", text: "AES-256 encryption cut data-breach risk by 95%" },
+      { kind: "added", text: "Admin interface for managing registrations" },
+    ],
+    metric: { value: "1,000+", label: "users registered through the platform" },
+    projects: ["placebook", "payme"],
+  },
+  {
+    id: "improwised",
+    year: "2024",
+    when: "May – Jul 2024",
+    title: "Software engineer intern",
+    place: "Improwised Technology",
+    story:
+      "I built an error-resolving system that uses large language models to diagnose infrastructure failures. An LLM proxy handles model traffic, Outlines shapes the prompts, and a message queue keeps the parts loosely coupled.",
+    changes: [
+      { kind: "steadier", text: "System reliability up 70% with queue-based decoupling" },
+      { kind: "added", text: "Integrated Robusta and open models like Llama" },
+    ],
+    metric: { value: "34%", label: "faster infrastructure error resolution" },
+    projects: ["version-control", "srs"],
+  },
+  {
+    id: "graduate",
+    year: "2025",
+    when: "2025",
+    title: "Graduated",
+    place: "DA-IICT",
+    // ASSUMED: wording. Add your final-year project or thesis if you have one.
+    story:
+      "Graduated with a B.Tech in Information & Technology, first class with distinction, with two internships and a set of shipped projects behind me.",
+    changes: [{ kind: "added", text: "B.Tech, first class with distinction" }],
+  },
+  {
+    id: "now",
+    year: "Now",
+    when: "2026",
+    title: "What I'm doing now",
+    place: "Rajkot, India",
+    // ASSUMED: replace with your current role, company and focus.
+    story:
+      "Working as a software engineer on backend and infrastructure systems, and exploring how LLMs can make operations calmer. I'm open to new roles, freelance projects and good conversations.",
+    changes: [],
   },
 ];
+
+/* ───────────────────────── Projects ───────────────────────── */
 
 export const projects: Project[] = [
   {
+    slug: "srs",
     title: "Student Registration System",
-    description:
-      "A Django-based registration system for colleges, built for robust student registration and verification for online exams.",
-    tags: ["Python", "Django"],
+    year: "2024", // ASSUMED year
+    summary: "Django registration system for colleges, with verification for online exams.",
+    stack: ["Python", "Django", "PostgreSQL"],
     image: srs,
     live: "https://srs.kmmenpara.xyz/",
+    // ASSUMED: case-study text below is drafted from the project description.
+    problem:
+      "Colleges running online exams need to know that the student sitting the exam is the one who registered. Spreadsheets and ad-hoc forms made that slow and error-prone.",
+    approach: [
+      "Built a Django app that handles student registration, document upload and admin verification in one place.",
+      "Gave administrators a review queue so each registration is checked once and its status is visible to the student.",
+      "Kept student data in PostgreSQL with role-based access for staff.",
+    ],
+    outcome: "A single, auditable registration and verification flow that the exam team can run without spreadsheets.",
   },
   {
+    slug: "placebook",
     title: "Placebook",
-    description:
-      "A MERN web app where travel enthusiasts share photos and locations of places they've visited.",
-    tags: ["MongoDB", "Express", "React", "Node.js"],
+    year: "2023", // ASSUMED year
+    summary: "MERN app where travellers share photos and locations of places they love.",
+    stack: ["MongoDB", "Express", "React", "Node.js"],
     image: placebook,
     live: "https://placebook.kmmenpara.xyz/",
+    // ASSUMED: case-study text.
+    problem: "Travel recommendations get lost in chat threads. I wanted one place to pin a spot, add a photo and share it.",
+    approach: [
+      "React front end with authentication and per-user place collections.",
+      "Express and Node.js API with image upload and location data stored in MongoDB.",
+      "Map previews so every place shows where it actually is.",
+    ],
+    outcome: "A full MERN app from auth to file uploads, and my first end-to-end JavaScript project.",
   },
   {
+    slug: "payme",
     title: "PayMe",
-    description:
-      "A cross-functional Django web app that acts as a fully functional payment gateway for other projects.",
-    tags: ["Python", "Django", "REST API"],
+    year: "2023", // ASSUMED year
+    summary: "A Django payment-gateway service that other projects can plug into.",
+    stack: ["Python", "Django", "REST API"],
     image: payme,
     live: "https://paymentapi.kmmenpara.xyz/api/v1/",
+    // ASSUMED: case-study text.
+    problem: "Each of my projects needed payments, and wiring a gateway into every one of them was repetitive and risky.",
+    approach: [
+      "Built a standalone Django REST service that exposes payment operations through a versioned API.",
+      "Other apps call the API instead of talking to the gateway directly, so payment logic lives in one place.",
+    ],
+    outcome: "A reusable payment service with a stable /api/v1 contract that any project can call.",
   },
   {
+    slug: "learning-log",
     title: "Learning Log",
-    description:
-      "A personal knowledge tracker — a Django app for keeping journal entries on each topic you learn.",
-    tags: ["Python", "Django"],
+    year: "2022", // ASSUMED year
+    summary: "A personal knowledge tracker for journaling what you learn, topic by topic.",
+    stack: ["Python", "Django"],
     source: "https://github.com/KevinMenpara/Learning-Log",
+    // ASSUMED: case-study text.
+    problem: "Notes from courses and tutorials end up scattered. I wanted a simple journal organised by topic.",
+    approach: [
+      "Django app with user accounts, topics and dated entries.",
+      "Each user sees only their own topics and entries.",
+    ],
+    outcome: "My first complete Django project, covering models, auth, forms and deployment.",
   },
   {
+    slug: "version-control",
     title: "Version Control System",
-    description:
-      "A Python-based version control system to manage and track changes in your projects efficiently.",
-    tags: ["Python", "Systems"],
+    year: "2024", // ASSUMED year (built for Winter of Code 6.0)
+    summary: "A Git-style version control system written from scratch in Python.",
+    stack: ["Python", "Systems programming"],
     source: "https://github.com/KevinMenpara/WoC_6.0_Systems_Programming_KevinMenpara",
+    // ASSUMED: case-study text.
+    problem: "Using Git every day is different from understanding it. Building one is the fastest way to learn how it works.",
+    approach: [
+      "Implemented content-addressed storage for file snapshots.",
+      "Added commits, history and change tracking on top of that store.",
+      "Built for the Winter of Code systems programming track.",
+    ],
+    outcome: "A working version control tool and a much deeper understanding of how Git stores history.",
   },
 ];
 
-export const education: Education[] = [
+/* ───────────────────────── Routes at the end ───────────────────────── */
+
+// ASSUMED: the services you offer for freelance work.
+export const services: Service[] = [
   {
-    degree: "B.Tech in Information & Technology",
-    school: "DA-IICT",
-    period: "2021 – 2025",
-    note: "First class with distinction",
+    title: "Backends and APIs",
+    body: "Django or Node.js services with a clean API, a sensible database design and tests.",
+    stack: ["Django", "Node.js", "PostgreSQL"],
   },
   {
-    degree: "Higher Secondary School",
-    school: "Lotus High School",
-    period: "2019 – 2021",
-    note: "First class with distinction",
+    title: "LLM features and tooling",
+    body: "Practical LLM integrations: summarising, classifying and resolving, with guardrails.",
+    stack: ["Python", "LLMs"],
+  },
+  {
+    title: "Containers and deployment",
+    body: "Docker, CI pipelines and Kubernetes setups that a small team can run.",
+    stack: ["Docker", "Kubernetes", "AWS", "Jenkins"],
   },
 ];
+
+/** Add posts here; the notes section appears once there is at least one. */
+export const notes: Note[] = [];
+
+export const skills = {
+  Languages: ["Python", "C/C++", "JavaScript", "SQL"],
+  Frameworks: ["Django", "React", "Node.js", "NumPy"],
+  Infrastructure: ["Docker", "Kubernetes", "AWS", "EKS", "Jenkins"],
+  Data: ["PostgreSQL", "MongoDB"],
+};
+
+/** Where the site is published; used for sitemap and social previews. */
+export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://kevinmenpara.github.io/portfolio").replace(/\/$/, "");
+
+export const projectBySlug = (slug: string) => projects.find((p) => p.slug === slug);
