@@ -25,6 +25,8 @@ export type Chapter = {
   when: string;
   title: string;
   place: string;
+  /** One line shown before the chapter is expanded. */
+  summary: string;
   story: string;
   changes: Change[];
   /** One standout figure for the chapter. */
@@ -33,8 +35,12 @@ export type Chapter = {
   projects?: string[];
 };
 
+/** Each project's branch colour, used everywhere the project appears. */
+export type BranchColor = "blue" | "green" | "amber" | "violet" | "rose";
+
 export type Project = {
   slug: string;
+  color: BranchColor;
   title: string;
   year: string;
   summary: string;
@@ -84,6 +90,7 @@ export const journey: Chapter[] = [
     when: "2019 – 2021",
     title: "Higher secondary",
     place: "Lotus High School",
+    summary: "Finished school with distinction and chose to study technology.", // ASSUMED
     // ASSUMED: story wording. Add how you first got into programming.
     story:
       "Finished school with a first-class distinction and decided to study technology. This is where the curiosity about how software works started.",
@@ -95,6 +102,7 @@ export const journey: Chapter[] = [
     when: "2021 – 2025",
     title: "B.Tech at DA-IICT",
     place: "DA-IICT, Gandhinagar",
+    summary: "Computer science foundations, first full-stack apps, and leading my batch.",
     // ASSUMED: story wording; add hackathons, Winter of Code and other turning points.
     story:
       "Four years of computer science foundations: data structures, operating systems, databases, networks, cloud and cryptography. I built my first Django apps here and learned to lead as well as code.",
@@ -110,6 +118,7 @@ export const journey: Chapter[] = [
     when: "May – Jul 2023",
     title: "Full-stack developer intern",
     place: "Rovren Technology",
+    summary: "Shipped my first production system: secure registration for 1,000+ users.",
     story:
       "My first production system: the RITAAwards registration platform, built with ToolJet, AWS S3 and SMTP. Real users, real data, and a real need to keep it secure.",
     changes: [
@@ -126,6 +135,7 @@ export const journey: Chapter[] = [
     when: "May – Jul 2024",
     title: "Software engineer intern",
     place: "Improwised Technology",
+    summary: "Built an LLM system that resolves infrastructure errors 34% faster.",
     story:
       "I built an error-resolving system that uses large language models to diagnose infrastructure failures. An LLM proxy handles model traffic, Outlines shapes the prompts, and a message queue keeps the parts loosely coupled.",
     changes: [
@@ -141,6 +151,7 @@ export const journey: Chapter[] = [
     when: "2025",
     title: "Graduated",
     place: "DA-IICT",
+    summary: "B.Tech in Information & Technology, first class with distinction.",
     // ASSUMED: wording. Add your final-year project or thesis if you have one.
     story:
       "Graduated with a B.Tech in Information & Technology, first class with distinction, with two internships and a set of shipped projects behind me.",
@@ -152,6 +163,7 @@ export const journey: Chapter[] = [
     when: "2026",
     title: "What I'm doing now",
     place: "Rajkot, India",
+    summary: "Software engineer on backend and infrastructure systems, open to new work.", // ASSUMED
     // ASSUMED: replace with your current role, company and focus.
     story:
       "Working as a software engineer on backend and infrastructure systems, and exploring how LLMs can make operations calmer. I'm open to new roles, freelance projects and good conversations.",
@@ -164,6 +176,7 @@ export const journey: Chapter[] = [
 export const projects: Project[] = [
   {
     slug: "srs",
+    color: "blue",
     title: "Student Registration System",
     year: "2024", // ASSUMED year
     summary: "Django registration system for colleges, with verification for online exams.",
@@ -182,6 +195,7 @@ export const projects: Project[] = [
   },
   {
     slug: "placebook",
+    color: "green",
     title: "Placebook",
     year: "2023", // ASSUMED year
     summary: "MERN app where travellers share photos and locations of places they love.",
@@ -199,6 +213,7 @@ export const projects: Project[] = [
   },
   {
     slug: "payme",
+    color: "amber",
     title: "PayMe",
     year: "2023", // ASSUMED year
     summary: "A Django payment-gateway service that other projects can plug into.",
@@ -215,6 +230,7 @@ export const projects: Project[] = [
   },
   {
     slug: "learning-log",
+    color: "violet",
     title: "Learning Log",
     year: "2022", // ASSUMED year
     summary: "A personal knowledge tracker for journaling what you learn, topic by topic.",
@@ -230,6 +246,7 @@ export const projects: Project[] = [
   },
   {
     slug: "version-control",
+    color: "rose",
     title: "Version Control System",
     year: "2024", // ASSUMED year (built for Winter of Code 6.0)
     summary: "A Git-style version control system written from scratch in Python.",

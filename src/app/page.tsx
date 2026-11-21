@@ -1,13 +1,16 @@
 import Link from "next/link";
 import { ContactForm } from "@/components/ContactForm";
 import { Journey } from "@/components/Journey";
+import { JourneyOverview } from "@/components/JourneyOverview";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { GitHubIcon, LinkedInIcon } from "@/components/icons";
 import { journey, notes, profile, projects, services, skills } from "@/content/profile";
+import { branch } from "@/lib/branch";
 
 const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
 const shell = "mx-auto max-w-6xl px-5 sm:px-8";
+const pillDark = "rounded-full bg-ink px-6 py-3 font-semibold text-paper transition hover:opacity-85";
+const pillLine = "rounded-full border border-ink/25 px-6 py-3 font-semibold transition hover:border-ink";
 
 export default function Home() {
   return (
@@ -15,18 +18,17 @@ export default function Home() {
       <SiteHeader name={profile.name} resumeUrl={profile.resumeUrl} />
       <main>
         <Hero />
-        <section id="journey" aria-labelledby="journey-h" className={`${shell} pb-16`}>
-          <h2 id="journey-h" className="sr-only">
-            The journey so far
-          </h2>
+
+        <section id="journey" aria-labelledby="journey-h" className={`${shell} pb-8 pt-20 sm:pt-28`}>
+          <SectionHead id="journey-h" title="The journey" note="Each chapter is a commit. Projects branch off where I built them." />
           <Journey chapters={journey} projects={projects} />
         </section>
-        <Work />
+
+        <Projects />
         <WhereNext />
+
         <section id="contact" aria-labelledby="contact-h" className={`${shell} py-20 sm:py-28`}>
-          <h2 id="contact-h" className="display mb-12 text-[clamp(2.75rem,7vw,5rem)]">
-            Get in touch
-          </h2>
+          <SectionHead id="contact-h" title="Get in touch" note="Tell me what it's about and I'll reply within a couple of days." />
           <ContactForm email={profile.email} endpoint={profile.contactEndpoint} />
         </section>
       </main>
@@ -35,85 +37,76 @@ export default function Home() {
   );
 }
 
+function SectionHead({ id, title, note }: { id: string; title: string; note: string }) {
+  return (
+    <div className="mb-14 flex flex-wrap items-end justify-between gap-x-10 gap-y-3">
+      <h2 id={id} className="display text-[clamp(2.75rem,7vw,5.25rem)]">
+        {title}
+      </h2>
+      <p className="max-w-[38ch] text-muted">{note}</p>
+    </div>
+  );
+}
+
 function Hero() {
   return (
-    <section className={`${shell} pb-16 pt-32 sm:pt-40`}>
-      <p className="text-lg text-muted">
-        {profile.role} in {profile.location.split(",")[0]}, India
-      </p>
-      <h1 className="display mt-4 text-[clamp(3.6rem,15.5vw,11.5rem)]">
-        Kevin
-        <br />
-        Menpara
-      </h1>
-
-      <div className="mt-10 grid items-end gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
-        <p className="max-w-[34ch] text-xl leading-snug sm:text-2xl">{profile.promise}</p>
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 lg:justify-end">
-          <a
-            href="#journey"
-            className="rounded-full bg-cobalt px-6 py-3 font-semibold text-on-cobalt transition hover:opacity-90"
-          >
-            Follow my journey
+    <section className={`${shell} pt-32 sm:pt-40`}>
+      <h1 className="display text-[clamp(3.4rem,11.5vw,9.5rem)]">{profile.name}</h1>
+      <div className="mt-8 grid items-end gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+        <p className="max-w-[36ch] text-xl leading-snug sm:text-2xl">
+          {profile.role} in {profile.location.split(",")[0]}. {profile.promise}
+        </p>
+        <div className="flex flex-wrap gap-3 lg:justify-end">
+          <a href="#journey" className={pillDark}>
+            Follow the journey
           </a>
-          <a href={profile.resumeUrl} {...ext} className="font-semibold underline decoration-rule underline-offset-4 hover:decoration-ink">
+          <a href={profile.resumeUrl} {...ext} className={pillLine}>
             Skip to résumé
           </a>
         </div>
       </div>
 
-      {/* Chapter strip: a map of the story below. */}
-      <nav aria-label="Journey chapters" className="mt-16 overflow-x-auto pb-2">
-        <ol className="relative flex min-w-max gap-0 before:absolute before:inset-x-0 before:top-[7px] before:h-px before:bg-rule">
-          {journey.map((c, i) => (
-            <li key={c.id} className="relative pr-10 sm:pr-14">
-              <a href={`#${c.id}`} className="group block pt-6">
-                <span
-                  className={`absolute left-0 top-0 size-[15px] rounded-full border-2 ${
-                    i === journey.length - 1 ? "border-cobalt bg-cobalt" : "border-rule bg-paper group-hover:border-cobalt"
-                  }`}
-                  aria-hidden="true"
-                />
-                <span className="block font-bold [font-stretch:115%]">{c.year}</span>
-                <span className="block text-[15px] text-muted group-hover:text-ink">{c.place.split(",")[0]}</span>
-              </a>
-            </li>
-          ))}
-        </ol>
-      </nav>
+      <div className="mt-16 border-y border-rule py-8">
+        <JourneyOverview chapters={journey} projects={projects} />
+      </div>
     </section>
   );
 }
 
-function Work() {
+function Projects() {
   const sorted = [...projects].sort((a, b) => b.year.localeCompare(a.year));
   return (
-    <section id="work" aria-labelledby="work-h" className="border-t border-rule bg-surface">
+    <section id="work" aria-labelledby="work-h" className="border-t border-rule bg-lift">
       <div className={`${shell} py-20 sm:py-28`}>
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <h2 id="work-h" className="display text-[clamp(2.75rem,7vw,5rem)]">
-            Work
-          </h2>
-          <p className="max-w-[40ch] text-muted">Everything I&apos;ve built, newest first. Each one has a short case study.</p>
-        </div>
-
-        <ol className="mt-12 border-t border-ink">
-          {sorted.map((p) => (
-            <li key={p.slug} className="border-b border-rule">
-              <Link
-                href={`/work/${p.slug}/`}
-                className="group grid grid-cols-[3.5rem_minmax(0,1fr)] gap-x-4 gap-y-1 py-6 sm:grid-cols-[4.5rem_minmax(0,15rem)_minmax(0,1fr)] sm:gap-x-8"
-              >
-                <span className="text-muted">{p.year}</span>
-                <span className="text-xl font-bold [font-stretch:110%] group-hover:text-cobalt">{p.title}</span>
-                <span className="col-start-2 text-muted sm:col-start-3 sm:row-start-1">
-                  {p.summary}
-                  <span className="mt-1 block text-[15px] text-muted/80">{p.stack.join(", ")}</span>
-                </span>
-              </Link>
+        <SectionHead id="work-h" title="Projects" note="Every project from the journey, newest first. Each has a short case study." />
+        <ul className="grid gap-px overflow-hidden rounded-2xl border border-rule bg-rule sm:grid-cols-2">
+          {sorted.map((p) => {
+            const c = branch[p.color];
+            return (
+              <li key={p.slug} className="bg-lift">
+                <Link href={`/work/${p.slug}/`} className="group flex h-full gap-5 p-6 transition hover:bg-paper sm:p-8">
+                  <span aria-hidden="true" className={`mt-2 h-auto w-[3px] shrink-0 rounded-full ${c.bg}`} />
+                  <span className="min-w-0">
+                    <span className={`block font-mono text-sm ${c.text}`}>
+                      feature/{p.slug} <span className="text-muted">({p.year})</span>
+                    </span>
+                    <span className="mt-1 block text-2xl font-semibold tracking-tight group-hover:underline">{p.title}</span>
+                    <span className="mt-2 block text-muted">{p.summary}</span>
+                    <span className="mt-3 block text-[15px] text-muted/80">{p.stack.join(", ")}</span>
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+          {sorted.length % 2 === 1 && (
+            <li className="hidden bg-lift sm:block">
+              <a href={profile.socials.github} {...ext} className="flex h-full flex-col justify-end p-8 text-muted transition hover:bg-paper hover:text-ink">
+                <span className="text-2xl font-semibold text-ink">More on GitHub</span>
+                <span className="mt-2">Experiments, coursework and smaller tools.</span>
+              </a>
             </li>
-          ))}
-        </ol>
+          )}
+        </ul>
 
         <dl className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {Object.entries(skills).map(([group, items]) => (
@@ -130,76 +123,56 @@ function Work() {
 
 function WhereNext() {
   const apps = projects.filter((p) => p.live);
-  const routes = [
+  const rows = [
     {
-      title: "Hiring?",
-      body: (
+      q: "Hiring?",
+      a: "The résumé has the full picture, LinkedIn has references and the rest.",
+      actions: (
         <>
-          <p className="text-muted">My résumé has the full picture. LinkedIn has the rest.</p>
-          <div className="mt-5 flex flex-wrap gap-3">
-            <a href={profile.resumeUrl} {...ext} className="rounded-full bg-cobalt px-5 py-2.5 font-semibold text-on-cobalt hover:opacity-90">
-              Open résumé
-            </a>
-            <a href={profile.socials.linkedin} {...ext} className="inline-flex items-center gap-2 rounded-full border border-rule px-5 py-2.5 font-semibold hover:border-ink/30">
-              <LinkedInIcon /> LinkedIn
-            </a>
-          </div>
-        </>
-      ),
-    },
-    {
-      title: "Building something?",
-      body: (
-        <>
-          <ul className="grid gap-4">
-            {services.map((s) => (
-              <li key={s.title}>
-                <p className="font-semibold">{s.title}</p>
-                <p className="text-muted">{s.body}</p>
-              </li>
-            ))}
-          </ul>
-          <a href="#contact" className="mt-5 inline-block font-semibold text-cobalt underline underline-offset-4">
-            Tell me about your project
+          <a href={profile.resumeUrl} {...ext} className={pillDark}>
+            Open résumé
+          </a>
+          <a href={profile.socials.linkedin} {...ext} className={pillLine}>
+            LinkedIn
           </a>
         </>
       ),
     },
     {
-      title: "Try my apps",
-      body: (
-        <ul className="grid gap-3">
+      q: "Need something built?",
+      a: services.map((s) => s.title).join(", ") + ".",
+      actions: (
+        <a href="#contact" className={pillDark}>
+          Tell me about it
+        </a>
+      ),
+    },
+    {
+      q: "Want to try my apps?",
+      a: "Three of my projects are live. Have a click around.",
+      actions: (
+        <>
           {apps.map((p) => (
-            <li key={p.slug}>
-              <a href={p.live} {...ext} className="group block">
-                <span className="font-semibold group-hover:text-cobalt">{p.title}</span>
-                <span className="block text-[15px] text-muted">{new URL(p.live!).host}</span>
-              </a>
-            </li>
-          ))}
-          <li>
-            <a href={profile.socials.github} {...ext} className="inline-flex items-center gap-2 font-semibold text-cobalt">
-              <GitHubIcon /> More on GitHub
+            <a key={p.slug} href={p.live} {...ext} className={`rounded-full border-2 px-5 py-2.5 font-semibold transition hover:opacity-80 ${branch[p.color].border} ${branch[p.color].text}`}>
+              {p.title.length > 16 ? p.title.split(" ").map((w) => w[0]).join("") : p.title}
             </a>
-          </li>
-        </ul>
+          ))}
+        </>
       ),
     },
     ...(notes.length
       ? [
           {
-            title: "Read my notes",
-            body: (
-              <ul className="grid gap-3">
-                {notes.map((n) => (
-                  <li key={n.href}>
-                    <a href={n.href} {...ext} className="group block">
-                      <span className="font-semibold group-hover:text-cobalt">{n.title}</span>
-                      <span className="block text-[15px] text-muted">{n.date}</span>
-                    </a>
-                  </li>
+            q: "Like to read?",
+            a: `${notes.length} note${notes.length === 1 ? "" : "s"} on what I'm building and learning.`,
+            actions: (
+              <>
+                {notes.slice(0, 3).map((n) => (
+                  <a key={n.href} href={n.href} {...ext} className={pillLine}>
+                    {n.title}
+                  </a>
                 ))}
-              </ul>
+              </>
             ),
           },
         ]
@@ -208,17 +181,16 @@ function WhereNext() {
 
   return (
     <section aria-labelledby="next-h" className={`${shell} py-20 sm:py-28`}>
-      <h2 id="next-h" className="display text-[clamp(2.75rem,7vw,5rem)]">
-        Where to next
-      </h2>
-      <div className={`mt-12 grid gap-12 md:grid-cols-2 ${routes.length > 3 ? "xl:grid-cols-4" : "lg:grid-cols-3"} lg:gap-10`}>
-        {routes.map((r) => (
-          <div key={r.title} className="border-t-2 border-ink pt-5">
-            <h3 className="mb-4 text-2xl font-bold [font-stretch:110%]">{r.title}</h3>
-            {r.body}
-          </div>
+      <SectionHead id="next-h" title="Where to next" note="Pick the line that sounds like you." />
+      <ul className="border-t-2 border-ink">
+        {rows.map((r) => (
+          <li key={r.q} className="grid gap-x-10 gap-y-4 border-b border-rule py-9 lg:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_minmax(0,4fr)] lg:items-center">
+            <h3 className="display text-4xl sm:text-5xl">{r.q}</h3>
+            <p className="max-w-[44ch] text-lg text-muted">{r.a}</p>
+            <div className="flex flex-wrap gap-3 lg:justify-end">{r.actions}</div>
+          </li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 }

@@ -22,7 +22,7 @@ export function SiteHeader({ name, resumeUrl, onHome = true }: Props) {
   const base = onHome ? "" : "/";
   const links = [
     { href: `${base}#journey`, label: "Journey" },
-    { href: `${base}#work`, label: "Work" },
+    { href: `${base}#work`, label: "Projects" },
     { href: `${base}#contact`, label: "Contact" },
   ];
 
@@ -33,7 +33,7 @@ export function SiteHeader({ name, resumeUrl, onHome = true }: Props) {
       }`}
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-5 sm:px-8">
-        <Link href="/" className="mr-auto text-[15px] font-bold [font-stretch:115%]" onClick={() => setOpen(false)}>
+        <Link href="/" className="mr-auto text-[15px] font-bold tracking-tight" onClick={() => setOpen(false)}>
           {name}
         </Link>
 
@@ -52,7 +52,7 @@ export function SiteHeader({ name, resumeUrl, onHome = true }: Props) {
             href={resumeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden rounded-full border border-cobalt px-4 py-1.5 text-sm font-semibold text-cobalt transition hover:bg-cobalt hover:text-on-cobalt sm:inline-block"
+            className="hidden rounded-full bg-ink px-4 py-1.5 text-sm font-semibold text-paper transition hover:opacity-85 sm:inline-block"
           >
             Résumé
           </a>
@@ -80,7 +80,7 @@ export function SiteHeader({ name, resumeUrl, onHome = true }: Props) {
             </li>
           ))}
           <li>
-            <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="block py-2 text-cobalt">
+            <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="block py-2 font-semibold">
               Résumé
             </a>
           </li>

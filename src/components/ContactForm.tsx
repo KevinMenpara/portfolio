@@ -57,7 +57,7 @@ export function ContactForm({ email, endpoint }: Props) {
   }
 
   const field =
-    "w-full rounded-lg border border-rule bg-surface px-4 py-3 text-base text-ink placeholder:text-muted/70 focus:border-cobalt focus:outline-none";
+    "w-full rounded-lg border border-rule bg-lift px-4 py-3 text-base text-ink placeholder:text-muted/70 focus:border-ink focus:outline-none";
 
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
@@ -110,12 +110,12 @@ export function ContactForm({ email, endpoint }: Props) {
           <button
             type="submit"
             disabled={status.kind === "sending"}
-            className="rounded-full bg-cobalt px-6 py-3 font-semibold text-on-cobalt transition hover:opacity-90 disabled:opacity-60"
+            className="rounded-full bg-ink px-6 py-3 font-semibold text-paper transition hover:opacity-90 disabled:opacity-60"
           >
             {status.kind === "sending" ? "Sending…" : "Send message"}
           </button>
           {status.message && (
-            <p role="status" className={status.kind === "error" ? "text-safer" : "text-faster"}>
+            <p role="status" className={status.kind === "error" ? "text-rose" : "text-green"}>
               {status.message}
             </p>
           )}

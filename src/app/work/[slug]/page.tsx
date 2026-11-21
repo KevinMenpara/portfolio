@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { GitHubIcon } from "@/components/icons";
 import { journey, profile, projectBySlug, projects } from "@/content/profile";
+import { branch } from "@/lib/branch";
 
 export const dynamicParams = false;
 
@@ -25,84 +26,102 @@ export default async function CaseStudy({ params }: Params) {
   const p = projectBySlug(slug);
   if (!p) notFound();
 
-  const chapter = journey.find((c) => c.projects?.includes(p.slug));
+  const c = branch[p.color];
+  const chapter = journey.find((ch) => ch.projects?.includes(p.slug));
   const i = projects.findIndex((x) => x.slug === p.slug);
   const next = projects[(i + 1) % projects.length];
   const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
+  const link = "underline decoration-rule underline-offset-4 hover:decoration-ink";
 
   return (
     <>
       <SiteHeader name={profile.name} resumeUrl={profile.resumeUrl} onHome={false} />
       <main className="mx-auto max-w-6xl px-5 pb-24 pt-28 sm:px-8 sm:pt-36">
-        <Link href="/#work" className="text-muted hover:text-ink">
-          All work
+        <Link href="/#work" className={`text-muted ${link}`}>
+          All projects
         </Link>
 
-        <h1 className="display mt-6 text-[clamp(2.75rem,9vw,6.5rem)]">{p.title}</h1>
-        <p className="mt-6 max-w-[48ch] text-xl leading-snug sm:text-2xl">{p.summary}</p>
+        {/* The case study runs down its own branch line. */}
+        <div className="relative mt-10 pl-8 sm:pl-14">
+          <span aria-hidden="true" className={`absolute bottom-2 left-[7px] top-2 w-[3px] rounded-full ${c.bg}`} />
+          <span aria-hidden="true" className={`absolute left-0 top-1 size-[17px] rounded-full border-[3px] bg-paper ${c.border}`} />
 
-        <dl className="mt-10 grid gap-6 border-t border-rule pt-6 sm:grid-cols-3">
-          <div>
-            <dt className="text-muted">Year</dt>
-            <dd className="font-semibold">{p.year}</dd>
-          </div>
-          <div>
-            <dt className="text-muted">Built with</dt>
-            <dd className="font-semibold">{p.stack.join(", ")}</dd>
-          </div>
-          {chapter && (
-            <div>
-              <dt className="text-muted">Part of the journey</dt>
-              <dd>
-                <Link href={`/#${chapter.id}`} className="font-semibold text-cobalt underline underline-offset-4">
-                  The {chapter.year} chapter
+          <p className={`font-mono text-sm ${c.text}`}>
+            feature/{p.slug}
+            {chapter && (
+              <span className="text-muted">
+                {" "}
+                branched from main in{" "}
+                <Link href={`/#${chapter.id}`} className={link}>
+                  {chapter.year}
                 </Link>
-              </dd>
+              </span>
+            )}
+          </p>
+          <h1 className="display mt-4 text-[clamp(2.75rem,9vw,6.5rem)]">{p.title}</h1>
+          <p className="mt-6 max-w-[46ch] text-xl leading-snug sm:text-2xl">{p.summary}</p>
+
+          <dl className="mt-10 grid gap-6 sm:grid-cols-[10rem_minmax(0,1fr)]">
+            <div>
+              <dt className="text-muted">Year</dt>
+              <dd className="font-semibold">{p.year}</dd>
+            </div>
+            <div>
+              <dt className="text-muted">Built with</dt>
+              <dd className="font-semibold">{p.stack.join(", ")}</dd>
+            </div>
+          </dl>
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            {p.live && (
+              <a href={p.live} {...ext} className="rounded-full bg-ink px-6 py-3 font-semibold text-paper hover:opacity-85">
+                Open the live app
+              </a>
+            )}
+            {p.source && (
+              <a href={p.source} {...ext} className="inline-flex items-center gap-2 rounded-full border border-ink/25 px-6 py-3 font-semibold hover:border-ink">
+                <GitHubIcon /> View the source
+              </a>
+            )}
+          </div>
+
+          {p.image && (
+            <div className="mt-14 overflow-hidden rounded-2xl border border-rule bg-lift">
+              <Image src={p.image} alt={`Screenshot of ${p.title}`} sizes="(min-width: 1152px) 1040px, 100vw" className="h-auto w-full" priority />
             </div>
           )}
-        </dl>
 
-        <div className="mt-8 flex flex-wrap gap-3">
-          {p.live && (
-            <a href={p.live} {...ext} className="rounded-full bg-cobalt px-6 py-3 font-semibold text-on-cobalt hover:opacity-90">
-              Open the live app
-            </a>
-          )}
-          {p.source && (
-            <a href={p.source} {...ext} className="inline-flex items-center gap-2 rounded-full border border-rule px-6 py-3 font-semibold hover:border-ink/30">
-              <GitHubIcon /> View the source
-            </a>
-          )}
-        </div>
-
-        {p.image && (
-          <div className="mt-14 overflow-hidden rounded-2xl border border-rule bg-surface">
-            <Image src={p.image} alt={`Screenshot of ${p.title}`} sizes="(min-width: 1152px) 1088px, 100vw" className="h-auto w-full" priority />
+          <div className="mt-16 grid max-w-3xl gap-12">
+            <section>
+              <h2 className="text-2xl font-semibold tracking-tight">The problem</h2>
+              <p className="mt-3 text-lg leading-relaxed text-ink/85">{p.problem}</p>
+            </section>
+            <section>
+              <h2 className="text-2xl font-semibold tracking-tight">What I built</h2>
+              <ul className="mt-3 grid gap-3 text-lg leading-relaxed text-ink/85">
+                {p.approach.map((a) => (
+                  <li key={a} className="flex gap-3">
+                    <span aria-hidden="true" className={`mt-[0.7em] size-2 shrink-0 rounded-full ${c.bg}`} />
+                    {a}
+                  </li>
+                ))}
+              </ul>
+            </section>
+            <section>
+              <h2 className="text-2xl font-semibold tracking-tight">The result</h2>
+              <p className="mt-3 text-lg leading-relaxed text-ink/85">{p.outcome}</p>
+            </section>
           </div>
-        )}
 
-        <div className="mt-16 grid max-w-3xl gap-12">
-          <section>
-            <h2 className="text-2xl font-bold [font-stretch:110%]">The problem</h2>
-            <p className="mt-3 text-lg leading-relaxed text-ink/85">{p.problem}</p>
-          </section>
-          <section>
-            <h2 className="text-2xl font-bold [font-stretch:110%]">What I built</h2>
-            <ul className="mt-3 grid list-disc gap-2 pl-5 text-lg leading-relaxed text-ink/85 marker:text-cobalt">
-              {p.approach.map((a) => (
-                <li key={a}>{a}</li>
-              ))}
-            </ul>
-          </section>
-          <section>
-            <h2 className="text-2xl font-bold [font-stretch:110%]">The result</h2>
-            <p className="mt-3 text-lg leading-relaxed text-ink/85">{p.outcome}</p>
-          </section>
+          <p className={`mt-14 font-mono text-sm ${c.text}`}>Merged into main</p>
+          <span aria-hidden="true" className={`absolute -bottom-1 left-0 size-[17px] rounded-full border-[3px] border-ink bg-ink`} />
         </div>
 
         <Link href={`/work/${next.slug}/`} className="group mt-24 block border-t-2 border-ink pt-6">
           <span className="text-muted">Next project</span>
-          <span className="display mt-2 block text-[clamp(2rem,6vw,4rem)] group-hover:text-cobalt">{next.title}</span>
+          <span className={`display mt-2 block text-[clamp(2rem,6vw,4rem)] ${branch[next.color].text} group-hover:underline`}>
+            {next.title}
+          </span>
         </Link>
       </main>
       <SiteFooter />
