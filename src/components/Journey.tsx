@@ -109,14 +109,15 @@ export function Journey({ chapters, projects }: Props) {
                   </span>
                   {isOpen ? "Hide the details" : "Read the details"}
                 </button>
-                {c.caseStudy && (
+                {(c.caseStudies ?? []).map((slug, _, all) => (
                   <Link
-                    href={`/work/${c.caseStudy}/`}
+                    key={slug}
+                    href={`/work/${slug}/`}
                     className="inline-flex items-center rounded-full bg-ink px-4 py-1.5 text-[15px] font-medium text-paper transition hover:opacity-85"
                   >
-                    Read the case study
+                    {all.length === 1 ? "Read the case study" : `Case study: ${projects.find((p) => p.slug === slug)?.title ?? slug}`}
                   </Link>
-                )}
+                ))}
                 </div>
 
                 <div id={`${c.id}-details`} className="expand" data-open={isOpen}>

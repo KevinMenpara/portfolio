@@ -27,7 +27,7 @@ export default async function CaseStudy({ params }: Params) {
   if (!p) notFound();
 
   const c = branch[p.color];
-  const chapter = journey.find((ch) => ch.projects?.includes(p.slug) || ch.caseStudy === p.slug);
+  const chapter = journey.find((ch) => ch.projects?.includes(p.slug) || ch.caseStudies?.includes(p.slug));
   const isWork = p.kind === "work";
   const i = projects.findIndex((x) => x.slug === p.slug);
   const next = projects[(i + 1) % projects.length];
@@ -71,6 +71,12 @@ export default async function CaseStudy({ params }: Params) {
               <dt className="text-muted">Built with</dt>
               <dd className="font-semibold">{p.stack.join(", ")}</dd>
             </div>
+            {p.team && (
+              <div className="sm:col-span-2">
+                <dt className="text-muted">Team</dt>
+                <dd className="font-semibold">{p.team}</dd>
+              </div>
+            )}
           </dl>
 
           <div className="mt-8 flex flex-wrap gap-3">

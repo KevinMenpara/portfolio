@@ -16,9 +16,16 @@ matching item. Those pairs share a letter (A, B, C…).
 - [x] **Social preview image.** A generated card for links shared on LinkedIn, X and Slack.
 - [x] **Safer placeholder text.** The "Now" chapter no longer claims a job you may not have. It holds neutral wording until you replace it.
 - [ ] **Notes on the site (F).** Write posts as Markdown files in the repo. Builds after your first post exists.
-- [ ] **Cut or merge weaker projects (G).** Waiting for your decision.
+- [x] **Project line-up from the repo review (G).** Removed the "Version Control System" (the repo is a file organiser) and Learning Log. SRS is now described as a team course project where you owned deployment, Placebook's write-up is factual, and PayMe is hidden until its security fixes land. Added a GeoPanap case study.
+- [ ] **Rewrite the GitHub profile README.** Drafted on a branch in the KevinMenpara repo, waiting for you to merge.
 
 ## Kevin's list
+
+### Security (do these today)
+- [ ] **Green-lens (public):** `index.js` line 12 contains a teammate's MongoDB Atlas password. Ask them to change it, then delete the line.
+- [ ] **Placebook (private):** `backend/.env` contains your MongoDB Atlas password. Change it in Atlas and remove the file from the repo.
+- [ ] **Student-Registration-System (public):** delete the committed `SRS/db.sqlite3` (4 user accounts with password hashes) and move the Django secret key to an environment variable.
+- [ ] **PaymentGateway and Learning-Log (public):** move the hardcoded Django secret keys to environment variables. Generate new keys for anything deployed.
 
 ### Do these first
 - [x] **Change the Pages source.** Settings → Pages → Source: **GitHub Actions**. Until then, two deploys race on every push.
@@ -32,7 +39,10 @@ matching item. Those pairs share a letter (A, B, C…).
 - [ ] **D: Get one or two testimonials.** Ask your Improwised and Rovren leads for two or three sentences you can quote, with their name and role. Add them to `testimonials`.
 - [ ] **E: Review the error-resolving system deep dive.** Correct the diagram and fill in the `ASSUMED` parts: what triggered the system, where the answers went, and one thing that failed and what you changed.
 - [ ] **F: Write your first note.** 400–800 words on something you learned building the error-resolving system or PayMe. Send Claude the text, or add it as a Markdown file.
-- [ ] **G: Decide which projects to keep.** Learning Log and the version control system read as coursework. Keep, cut or merge them.
+- [x] **G: Decide which projects to keep.** Done: see the repo review.
+- [ ] **Confirm GeoPanap.** Was it Rovren client work, and in 2023? Correct the `ASSUMED` lines in its entry.
+- [ ] **PayMe:** hash passwords with Django's hasher (not AES encryption) and check ownership before serving receipt PDFs. Then set `hidden: false` and rewrite its case study. Or leave it hidden.
+- [ ] **Ask Rovren** whether you can show the RITAAwards demo video and screenshots.
 
 ### Bigger moves
 - [ ] **Custom domain.** Renew kmmenpara.xyz, add a CNAME record pointing to `kevinmenpara.github.io`, then set it under Settings → Pages → Custom domain. No code changes are needed.

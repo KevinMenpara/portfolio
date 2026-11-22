@@ -60,6 +60,9 @@ export function JourneyOverview({ chapters, projects }: Props) {
               <text x={xs[i]} y={MAIN_Y + 30} textAnchor="middle" fill="var(--ink)" className="text-[17px] font-bold group-hover:underline">
                 {c.year}
               </text>
+              <text x={xs[i]} y={MAIN_Y + 50} textAnchor="middle" fill="var(--muted)" className="text-[13px]">
+                {c.place.split(",")[0].replace(" Technology", "").replace(" High School", "")}
+              </text>
             </a>
           );
         })}

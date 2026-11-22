@@ -31,8 +31,8 @@ export type Chapter = {
   changes: Change[];
   /** One standout figure for the chapter. */
   metric?: { value: string; label: string };
-  /** Case study for the work done in this chapter (a "work" project slug). */
-  caseStudy?: string;
+  /** Case studies for the work done in this chapter ("work" project slugs). */
+  caseStudies?: string[];
   /** Slugs of personal projects built during this chapter; drawn as branches. */
   projects?: string[];
 };
@@ -46,6 +46,10 @@ export type Project = {
   kind: "work" | "personal";
   /** For work projects: the company. */
   company?: string;
+  /** For team projects: the team and your part in it, shown on the case study. */
+  team?: string;
+  /** Hidden projects stay in this file but don't appear anywhere on the site. */
+  hidden?: boolean;
   color: BranchColor;
   title: string;
   year: string;
@@ -121,9 +125,9 @@ export const journey: Chapter[] = [
       "Four years of computer science foundations: data structures, operating systems, databases, networks, cloud and cryptography. I built my first Django apps here and learned to lead as well as code.",
     changes: [
       { kind: "led", text: "Batch representative and event coordinator" },
-      { kind: "added", text: "First full-stack projects in Django and the MERN stack" },
+      { kind: "added", text: "Owned deployment for our team's Django course project" },
     ],
-    projects: ["learning-log", "srs"],
+    projects: ["srs"],
   },
   {
     id: "rovren",
@@ -131,17 +135,16 @@ export const journey: Chapter[] = [
     when: "May – Jul 2023",
     title: "Full-stack developer intern",
     place: "Rovren Technology",
-    summary: "Shipped my first production system: secure registration for 1,000+ users.",
+    summary: "Shipped two production systems for real clients, including secure registration for 1,000+ users.",
     story:
-      "My first production system: the RITAAwards registration platform, built with ToolJet, AWS S3 and SMTP. Real users, real data, and a real need to keep it secure.",
+      "My first production work, on ToolJet, PostgreSQL and AWS S3. The RITAAwards platform handled registrations for an IT industry association's awards, and GeoPanap managed land leases and environmental compliance for a semi-government agency. Real users, real data, and a real need to keep it secure.",
     changes: [
-      { kind: "added", text: "Registration and verification flow, end to end" },
+      { kind: "added", text: "RITAAwards: registration and verification, end to end" },
       { kind: "safer", text: "AES-256 encryption cut data-breach risk by 95%" },
-      { kind: "added", text: "Admin interface for managing registrations" },
+      { kind: "added", text: "GeoPanap: lease, customer and compliance tracking with versioned database migrations" },
     ],
     metric: { value: "1,000+", label: "users registered through the platform" },
-    caseStudy: "rita-awards",
-    projects: ["placebook", "payme"],
+    caseStudies: ["rita-awards", "geopanap"],
   },
   {
     id: "improwised",
@@ -157,8 +160,8 @@ export const journey: Chapter[] = [
       { kind: "added", text: "Integrated Robusta and open models like Llama" },
     ],
     metric: { value: "34%", label: "faster infrastructure error resolution" },
-    caseStudy: "ers",
-    projects: ["version-control"],
+    caseStudies: ["ers"],
+    projects: ["placebook"],
   },
   {
     id: "graduate",
@@ -188,7 +191,7 @@ export const journey: Chapter[] = [
 
 /* ───────────────────────── Projects ───────────────────────── */
 
-export const projects: Project[] = [
+export const allProjects: Project[] = [
   {
     slug: "ers",
     kind: "work",
@@ -243,98 +246,96 @@ export const projects: Project[] = [
     outcome: "A reliable, private registration process that handled 1,000+ users and made the organisers' work faster.",
   },
   {
+    slug: "geopanap",
+    kind: "work",
+    company: "Rovren Technology", // ASSUMED: confirm this was Rovren client work
+    color: "main",
+    title: "GeoPanap",
+    year: "2023", // ASSUMED year
+    summary: "A land-lease and environmental-compliance platform for a semi-government agency in the mining sector.",
+    stack: ["ToolJet", "PostgreSQL", "PostgREST", "AWS S3", "Docker", "sql-migrate"],
+    diagram: {
+      title: "What the platform tracks",
+      steps: [
+        { name: "Customers", detail: "Lease holders and their contact details, linked to their leases." },
+        { name: "Leases", detail: "Land lease agreements with survey details and expiry dates." },
+        { name: "Minerals", detail: "The minerals each lease covers for exploration and extraction." },
+        { name: "Environmental clearance", detail: "Clearance records with status updates and expiry dates." },
+        { name: "GPCB records", detail: "Pollution-control-board documentation and approval status." },
+        { name: "Documents", detail: "Regulatory files stored securely in AWS S3." },
+      ],
+    },
+    // ASSUMED: the problem framing and outcome. Correct them from your experience.
+    problem:
+      "A semi-government agency had to keep track of land leases, lease holders, environmental clearances and pollution-control-board approvals for mineral extraction. Each has its own documents and expiry dates, and a missed renewal has regulatory consequences.",
+    approach: [
+      "Designed the PostgreSQL schema for customers, leases, minerals, environmental clearance (EC) and GPCB records, with versioned migrations run through sql-migrate in Docker.",
+      "Exposed the database through a PostgREST API and built the desktop and mobile interfaces in ToolJet.",
+      "Tracked expiry dates and status updates for every lease and compliance record, so renewals are visible before they lapse.",
+      "Stored regulatory documents in AWS S3 and protected the app with authentication, access control and encrypted credentials.",
+    ],
+    outcome: "One place to manage leases and compliance records, with expiry dates tracked instead of chased.",
+  },
+  {
     slug: "srs",
     kind: "personal",
     color: "blue",
     title: "Student Registration System",
-    year: "2024", // ASSUMED year
-    summary: "Django registration system for colleges, with verification for online exams.",
-    stack: ["Python", "Django", "PostgreSQL"],
+    year: "2024",
+    team: "Team of five, IT314 Software Development course at DA-IICT. I owned deployment.",
+    summary: "A team-built Django system for college registration and online-exam verification. I owned deployment.",
+    stack: ["Python", "Django", "GitHub Actions", "Heroku"],
     image: srs,
     live: "https://srs.kmmenpara.xyz/",
-    // ASSUMED: case-study text below is drafted from the project description.
     problem:
-      "Colleges running online exams need to know that the student sitting the exam is the one who registered. Spreadsheets and ad-hoc forms made that slow and error-prone.",
+      "Colleges running online exams need to register applicants, verify who they are, and run the test, without juggling spreadsheets and email threads.",
     approach: [
-      "Built a Django app that handles student registration, document upload and admin verification in one place.",
-      "Gave administrators a review queue so each registration is checked once and its status is visible to the student.",
-      "Kept student data in PostgreSQL with role-based access for staff.",
+      "Built by a team of five for the IT314 Software Development course, from requirements and use cases through to a working app.",
+      "The app covers registration, email OTP verification, applications, deadlines, exam questions and results.",
+      "My part was getting it to production: I set up the GitHub Actions workflow for the Django app, prepared the production settings, and deployed it to Heroku.",
     ],
-    outcome: "A single, auditable registration and verification flow that the exam team can run without spreadsheets.",
+    outcome: "A working registration and exam system shipped by the team, and my first experience taking a team project to production.",
   },
   {
     slug: "placebook",
     kind: "personal",
     color: "green",
     title: "Placebook",
-    year: "2023", // ASSUMED year
-    summary: "MERN app where travellers share photos and locations of places they love.",
-    stack: ["MongoDB", "Express", "React", "Node.js"],
+    year: "2024",
+    summary: "A MERN app for sharing photos and locations of places you love: my first end-to-end JavaScript project.",
+    stack: ["MongoDB", "Express", "React", "Node.js", "Firebase Hosting"],
     image: placebook,
     live: "https://placebook.kmmenpara.xyz/",
-    // ASSUMED: case-study text.
-    problem: "Travel recommendations get lost in chat threads. I wanted one place to pin a spot, add a photo and share it.",
+    // ASSUMED: if Placebook started from a course, add a line saying what you built beyond it.
+    problem: "Travel recommendations get lost in chat threads. Placebook gives each place a page with a photo, an address and a map.",
     approach: [
-      "React front end with authentication and per-user place collections.",
-      "Express and Node.js API with image upload and location data stored in MongoDB.",
-      "Map previews so every place shows where it actually is.",
+      "React front end with sign-up, login and per-user collections of places.",
+      "Express and Node.js API with JWT authentication, image uploads and MongoDB storage.",
+      "Addresses are turned into map coordinates with the Google Geocoding API, so every place shows where it is.",
+      "Front end deployed on Firebase Hosting, with preview deploys on pull requests.",
     ],
-    outcome: "A full MERN app from auth to file uploads, and my first end-to-end JavaScript project.",
+    outcome: "A complete full-stack JavaScript app, from authentication and file uploads to deployment.",
   },
   {
     slug: "payme",
     kind: "personal",
+    // Hidden until fixed: passwords must be hashed (not encrypted) and receipt downloads need an ownership check.
+    hidden: true,
     color: "amber",
     title: "PayMe",
-    year: "2023", // ASSUMED year
-    summary: "A Django payment-gateway service that other projects can plug into.",
-    stack: ["Python", "Django", "REST API"],
-    image: payme,
-    live: "https://paymentapi.kmmenpara.xyz/api/v1/",
-    // ASSUMED: case-study text.
-    problem: "Each of my projects needed payments, and wiring a gateway into every one of them was repetitive and risky.",
-    approach: [
-      "Built a standalone Django REST service that exposes payment operations through a versioned API.",
-      "Other apps call the API instead of talking to the gateway directly, so payment logic lives in one place.",
-    ],
-    outcome: "A reusable payment service with a stable /api/v1 contract that any project can call.",
-  },
-  {
-    slug: "learning-log",
-    kind: "personal",
-    color: "violet",
-    title: "Learning Log",
-    year: "2022", // ASSUMED year
-    summary: "A personal knowledge tracker for journaling what you learn, topic by topic.",
+    year: "2024",
+    summary: "Sign-up with email two-factor verification and PDF receipts, in Django.",
     stack: ["Python", "Django"],
-    source: "https://github.com/KevinMenpara/Learning-Log",
-    // ASSUMED: case-study text.
-    problem: "Notes from courses and tutorials end up scattered. I wanted a simple journal organised by topic.",
-    approach: [
-      "Django app with user accounts, topics and dated entries.",
-      "Each user sees only their own topics and entries.",
-    ],
-    outcome: "My first complete Django project, covering models, auth, forms and deployment.",
-  },
-  {
-    slug: "version-control",
-    kind: "personal",
-    color: "rose",
-    title: "Version Control System",
-    year: "2024", // ASSUMED year (built for Winter of Code 6.0)
-    summary: "A Git-style version control system written from scratch in Python.",
-    stack: ["Python", "Systems programming"],
-    source: "https://github.com/KevinMenpara/WoC_6.0_Systems_Programming_KevinMenpara",
-    // ASSUMED: case-study text.
-    problem: "Using Git every day is different from understanding it. Building one is the fastest way to learn how it works.",
-    approach: [
-      "Implemented content-addressed storage for file snapshots.",
-      "Added commits, history and change tracking on top of that store.",
-      "Built for the Winter of Code systems programming track.",
-    ],
-    outcome: "A working version control tool and a much deeper understanding of how Git stores history.",
+    image: payme,
+    source: "https://github.com/KevinMenpara/PaymentGateway",
+    problem: "Draft: describe the problem PayMe solves once the security fixes are in.",
+    approach: ["Email two-factor verification on sign-up and login.", "PDF receipts generated with ReportLab."],
+    outcome: "Draft.",
   },
 ];
+
+/** Only the projects shown on the site. */
+export const projects: Project[] = allProjects.filter((p) => !p.hidden);
 
 /* ───────────────────────── Routes at the end ───────────────────────── */
 

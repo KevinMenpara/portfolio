@@ -17,9 +17,9 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 export default function Resume() {
   // The PDF button appears only once public/resume.pdf exists.
   const hasPdf = fs.existsSync(path.join(process.cwd(), "public", profile.resumePdf));
-  const work = journey.filter((c) => c.caseStudy).reverse();
+  const work = journey.filter((c) => c.caseStudies?.length).reverse();
   const personal = projects.filter((p) => p.kind === "personal");
-  const caseStudy = (slug?: string) => projects.find((p) => p.slug === slug);
+  const bySlug = (slug: string) => projects.find((p) => p.slug === slug);
 
   return (
     <>
@@ -65,19 +65,23 @@ export default function Resume() {
 
         <Block title="Experience">
           {work.map((c) => {
-            const p = caseStudy(c.caseStudy);
+            const studies = (c.caseStudies ?? []).map(bySlug).filter((p) => p !== undefined);
+            // One project: its full bullet list. Several: one line each.
+            const lines = studies.length === 1 ? studies[0].approach : studies.map((p) => `${p.title}: ${p.summary}`);
             return (
               <Entry key={c.id} title={`${c.title}, ${c.place}`} when={c.when}>
                 <ul className="mt-2 grid list-disc gap-1 pl-5 marker:text-muted print:mt-1 print:gap-0">
-                  {(p?.approach ?? c.changes.map((ch) => ch.text)).map((line) => (
+                  {lines.map((line) => (
                     <li key={line}>{line}</li>
                   ))}
                 </ul>
-                {p && (
-                  <Link href={`/work/${p.slug}/`} className="mt-2 inline-block text-[15px] text-muted underline underline-offset-4 print:hidden">
-                    Case study: {p.title}
-                  </Link>
-                )}
+                <p className="mt-2 flex flex-wrap gap-x-4 text-[15px] text-muted print:hidden">
+                  {studies.map((p) => (
+                    <Link key={p.slug} href={`/work/${p.slug}/`} className="underline underline-offset-4">
+                      Case study: {p.title}
+                    </Link>
+                  ))}
+                </p>
               </Entry>
             );
           })}
@@ -85,7 +89,7 @@ export default function Resume() {
 
         <Block title="Projects">
           {personal.map((p) => (
-            <Entry key={p.slug} title={p.title} when={p.year}>
+            <Entry key={p.slug} title={p.team ? `${p.title} (team project)` : p.title} when={p.year}>
               <p className="mt-1 print:mt-0">
                 {p.summary} <span className="text-muted">({p.stack.join(", ")})</span>
               </p>
