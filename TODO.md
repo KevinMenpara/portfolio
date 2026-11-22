@@ -21,7 +21,7 @@ matching item. Those pairs share a letter (A, B, C…).
 ## Kevin's list
 
 ### Do these first
-- [ ] **Change the Pages source.** Settings → Pages → Source: **GitHub Actions**. Until then, two deploys race on every push.
+- [x] **Change the Pages source.** Settings → Pages → Source: **GitHub Actions**. Until then, two deploys race on every push.
 - [ ] **Replace every `ASSUMED` line** in `src/content/profile.ts`. Start with the "Now" chapter (your current role), then project years, case studies and services.
 - [ ] **Check your live apps open:** srs.kmmenpara.xyz, placebook.kmmenpara.xyz, paymentapi.kmmenpara.xyz/api/v1/. Fix them, or remove the `live` link from any that are down. The weekly link check will also report them.
 
