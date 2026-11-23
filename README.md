@@ -17,6 +17,18 @@ Placeholder text written during the redesign is marked `ASSUMED`; search for it 
 
 Project screenshots go in `src/assets/projects/` (WebP, ~1200px wide) and are imported at the top of `profile.ts`.
 
+## Switches in `profile.ts`
+
+| Setting | What it does |
+| --- | --- |
+| `contactEndpoint` | Form backend URL (e.g. Formspree). Empty: the form opens the visitor's email app. |
+| `analytics.goatcounter` | GoatCounter code. Empty: no analytics script loads. |
+| `resumePdf` | Résumé PDF in `public/`. The download button appears once the file exists. |
+| `showPhone` | Show or hide the phone number. |
+| `testimonials`, `notes` | Their sections appear once they have entries. |
+
+See `TODO.md` for what's left.
+
 ## Development
 
 ```bash
@@ -32,6 +44,8 @@ npm run typecheck
 src/
   app/          layout (metadata, theme), page (all sections), global styles, favicon
   app/work/     one case-study page per project
+  app/resume/   résumé page, built from the same content (prints cleanly)
+  app/og.png/   social preview image, generated at build time
   components/   SiteHeader, Journey, ContactForm, SiteFooter, ThemeToggle, icons
   content/      profile.ts — the site's content
   assets/       images imported by the content file
@@ -39,6 +53,8 @@ src/
 ```
 
 ## Deployment
+
+`.github/workflows/links.yml` checks every link on the site weekly.
 
 `.github/workflows/deploy.yml` builds on every push to `main` and publishes `out/` to GitHub Pages.
 In the repo's **Settings → Pages**, set **Source** to **GitHub Actions**.

@@ -31,15 +31,25 @@ export type Chapter = {
   changes: Change[];
   /** One standout figure for the chapter. */
   metric?: { value: string; label: string };
-  /** Slugs from `projects` built during this chapter. */
+  /** Case studies for the work done in this chapter ("work" project slugs). */
+  caseStudies?: string[];
+  /** Slugs of personal projects built during this chapter; drawn as branches. */
   projects?: string[];
 };
 
 /** Each project's branch colour, used everywhere the project appears. */
-export type BranchColor = "blue" | "green" | "amber" | "violet" | "rose";
+export type BranchColor = "main" | "blue" | "green" | "amber" | "violet" | "rose";
 
 export type Project = {
   slug: string;
+  /** "work" projects happened at a company and sit on the main line; "personal" ones are branches. */
+  kind: "work" | "personal";
+  /** For work projects: the company. */
+  company?: string;
+  /** For team projects: the team and your part in it, shown on the case study. */
+  team?: string;
+  /** Hidden projects stay in this file but don't appear anywhere on the site. */
+  hidden?: boolean;
   color: BranchColor;
   title: string;
   year: string;
@@ -48,6 +58,8 @@ export type Project = {
   image?: StaticImageData;
   live?: string;
   source?: string;
+  /** Optional architecture diagram on the case-study page. */
+  diagram?: { title: string; steps: { name: string; detail: string; assumed?: boolean }[] };
   /** Case-study page. */
   problem: string;
   approach: string[];
@@ -56,6 +68,7 @@ export type Project = {
 
 export type Service = { title: string; body: string; stack: string[] };
 export type Note = { title: string; href: string; date: string; summary: string };
+export type Testimonial = { quote: string; name: string; role: string; company: string };
 
 /* ───────────────────────── Profile ───────────────────────── */
 
@@ -79,6 +92,10 @@ export const profile = {
    * Left empty, the contact form opens the visitor's email app instead.
    */
   contactEndpoint: "",
+  /** Résumé PDF in /public. The download button appears once the file exists. */
+  resumePdf: "resume.pdf",
+  /** Privacy-friendly analytics. Set your GoatCounter code (e.g. "kmenpara") to switch it on. */
+  analytics: { goatcounter: "" },
 };
 
 /* ───────────────────────── Journey ───────────────────────── */
@@ -108,9 +125,9 @@ export const journey: Chapter[] = [
       "Four years of computer science foundations: data structures, operating systems, databases, networks, cloud and cryptography. I built my first Django apps here and learned to lead as well as code.",
     changes: [
       { kind: "led", text: "Batch representative and event coordinator" },
-      { kind: "added", text: "First full-stack projects in Django and the MERN stack" },
+      { kind: "added", text: "Owned deployment for our team's Django course project" },
     ],
-    projects: ["learning-log"],
+    projects: ["srs"],
   },
   {
     id: "rovren",
@@ -118,16 +135,16 @@ export const journey: Chapter[] = [
     when: "May – Jul 2023",
     title: "Full-stack developer intern",
     place: "Rovren Technology",
-    summary: "Shipped my first production system: secure registration for 1,000+ users.",
+    summary: "Shipped two production systems for real clients, including secure registration for 1,000+ users.",
     story:
-      "My first production system: the RITAAwards registration platform, built with ToolJet, AWS S3 and SMTP. Real users, real data, and a real need to keep it secure.",
+      "My first production work, on ToolJet, PostgreSQL and AWS S3. The RITAAwards platform handled registrations for an IT industry association's awards, and GeoPanap managed land leases and environmental compliance for a semi-government agency. Real users, real data, and a real need to keep it secure.",
     changes: [
-      { kind: "added", text: "Registration and verification flow, end to end" },
+      { kind: "added", text: "RITAAwards: registration and verification, end to end" },
       { kind: "safer", text: "AES-256 encryption cut data-breach risk by 95%" },
-      { kind: "added", text: "Admin interface for managing registrations" },
+      { kind: "added", text: "GeoPanap: lease, customer and compliance tracking with versioned database migrations" },
     ],
     metric: { value: "1,000+", label: "users registered through the platform" },
-    projects: ["placebook", "payme"],
+    caseStudies: ["rita-awards", "geopanap"],
   },
   {
     id: "improwised",
@@ -143,7 +160,8 @@ export const journey: Chapter[] = [
       { kind: "added", text: "Integrated Robusta and open models like Llama" },
     ],
     metric: { value: "34%", label: "faster infrastructure error resolution" },
-    projects: ["version-control", "srs"],
+    caseStudies: ["ers"],
+    projects: ["placebook"],
   },
   {
     id: "graduate",
@@ -161,107 +179,163 @@ export const journey: Chapter[] = [
     id: "now",
     year: "Now",
     when: "2026",
-    title: "What I'm doing now",
+    title: "What's next",
     place: "Rajkot, India",
-    summary: "Software engineer on backend and infrastructure systems, open to new work.", // ASSUMED
+    summary: "Focused on backend, infrastructure and LLM tooling, and open to new work.", // ASSUMED
     // ASSUMED: replace with your current role, company and focus.
     story:
-      "Working as a software engineer on backend and infrastructure systems, and exploring how LLMs can make operations calmer. I'm open to new roles, freelance projects and good conversations.",
+      "After graduating I've kept building on what the internships taught me: backend systems, infrastructure, and using LLMs to make operations calmer. I'm open to full-time roles, freelance projects and conversations with early-stage teams.",
     changes: [],
   },
 ];
 
 /* ───────────────────────── Projects ───────────────────────── */
 
-export const projects: Project[] = [
+export const allProjects: Project[] = [
+  {
+    slug: "ers",
+    kind: "work",
+    company: "Improwised Technology",
+    color: "main",
+    title: "Error-resolving system",
+    year: "2024",
+    summary: "An LLM-powered system that diagnoses infrastructure errors and suggests fixes, 34% faster than before.",
+    stack: ["Python", "LLMs", "Llama", "Outlines", "Robusta", "Message queue", "Kubernetes"],
+    diagram: {
+      title: "How an error gets resolved",
+      steps: [
+        { name: "Kubernetes cluster", detail: "A workload fails or misbehaves." },
+        { name: "Robusta", detail: "Picks up the alert and collects context from the cluster." },
+        { name: "Message queue", detail: "Decouples alert intake from analysis, so bursts don't drop errors." },
+        { name: "ERS workers", detail: "Python services that build the diagnosis request." },
+        { name: "Outlines", detail: "Generates structured prompts and constrains the model's output." },
+        { name: "LLM proxy", detail: "One reliable gateway for model traffic, with retries and routing." },
+        { name: "Llama", detail: "Open model that proposes the likely cause and fix." },
+        { name: "Suggested fix", detail: "Returned to the on-call engineer alongside the alert.", assumed: true },
+      ],
+    },
+    // ASSUMED: the problem framing and the final delivery step. Correct them from your experience.
+    problem:
+      "Infrastructure alerts arrive faster than engineers can investigate them, and many failures are variations of problems the team has already solved. Diagnosing each one by hand slows down recovery.",
+    approach: [
+      "Built the error-resolving system (ERS) in Python, using large language models to diagnose infrastructure-level errors.",
+      "Routed all model traffic through an LLM proxy for robust, consistent communication with the models.",
+      "Used Outlines to generate structured prompts, so the model's answers came back in a predictable shape.",
+      "Put a message queue between alert intake and analysis for loose coupling, which improved reliability by 70%.",
+      "Integrated open-source tooling: Robusta for Kubernetes alerting and context, and open models like Llama.",
+    ],
+    outcome: "Infrastructure-level errors were resolved 34% faster, and the system was 70% more reliable thanks to the queue-based design.",
+  },
+  {
+    slug: "rita-awards",
+    kind: "work",
+    company: "Rovren Technology",
+    color: "main",
+    title: "RITAAwards registration",
+    year: "2023",
+    summary: "A secure registration and verification platform for an awards programme, used by 1,000+ people.",
+    stack: ["ToolJet", "AWS S3", "SMTP", "AES-256"],
+    // ASSUMED: the problem framing. Add who the awards were for and the timeline.
+    problem:
+      "An awards programme needed to register and verify more than a thousand applicants, and their personal details had to stay private.",
+    approach: [
+      "Built the RITAAwards registration system with ToolJet, storing uploads in AWS S3 and sending verification through SMTP.",
+      "Encrypted sensitive data with AES-256, reducing data-breach risk by 95%.",
+      "Created an admin interface so the organisers could review registrations and handle administrative tasks.",
+    ],
+    outcome: "A reliable, private registration process that handled 1,000+ users and made the organisers' work faster.",
+  },
+  {
+    slug: "geopanap",
+    kind: "work",
+    company: "Rovren Technology", // ASSUMED: confirm this was Rovren client work
+    color: "main",
+    title: "GeoPanap",
+    year: "2023", // ASSUMED year
+    summary: "A land-lease and environmental-compliance platform for a semi-government agency in the mining sector.",
+    stack: ["ToolJet", "PostgreSQL", "PostgREST", "AWS S3", "Docker", "sql-migrate"],
+    diagram: {
+      title: "What the platform tracks",
+      steps: [
+        { name: "Customers", detail: "Lease holders and their contact details, linked to their leases." },
+        { name: "Leases", detail: "Land lease agreements with survey details and expiry dates." },
+        { name: "Minerals", detail: "The minerals each lease covers for exploration and extraction." },
+        { name: "Environmental clearance", detail: "Clearance records with status updates and expiry dates." },
+        { name: "GPCB records", detail: "Pollution-control-board documentation and approval status." },
+        { name: "Documents", detail: "Regulatory files stored securely in AWS S3." },
+      ],
+    },
+    // ASSUMED: the problem framing and outcome. Correct them from your experience.
+    problem:
+      "A semi-government agency had to keep track of land leases, lease holders, environmental clearances and pollution-control-board approvals for mineral extraction. Each has its own documents and expiry dates, and a missed renewal has regulatory consequences.",
+    approach: [
+      "Designed the PostgreSQL schema for customers, leases, minerals, environmental clearance (EC) and GPCB records, with versioned migrations run through sql-migrate in Docker.",
+      "Exposed the database through a PostgREST API and built the desktop and mobile interfaces in ToolJet.",
+      "Tracked expiry dates and status updates for every lease and compliance record, so renewals are visible before they lapse.",
+      "Stored regulatory documents in AWS S3 and protected the app with authentication, access control and encrypted credentials.",
+    ],
+    outcome: "One place to manage leases and compliance records, with expiry dates tracked instead of chased.",
+  },
   {
     slug: "srs",
+    kind: "personal",
     color: "blue",
     title: "Student Registration System",
-    year: "2024", // ASSUMED year
-    summary: "Django registration system for colleges, with verification for online exams.",
-    stack: ["Python", "Django", "PostgreSQL"],
+    year: "2024",
+    team: "Team of five, IT314 Software Development course at DA-IICT. I owned deployment.",
+    summary: "A team-built Django system for college registration and online-exam verification. I owned deployment.",
+    stack: ["Python", "Django", "GitHub Actions", "Heroku"],
     image: srs,
     live: "https://srs.kmmenpara.xyz/",
-    // ASSUMED: case-study text below is drafted from the project description.
     problem:
-      "Colleges running online exams need to know that the student sitting the exam is the one who registered. Spreadsheets and ad-hoc forms made that slow and error-prone.",
+      "Colleges running online exams need to register applicants, verify who they are, and run the test, without juggling spreadsheets and email threads.",
     approach: [
-      "Built a Django app that handles student registration, document upload and admin verification in one place.",
-      "Gave administrators a review queue so each registration is checked once and its status is visible to the student.",
-      "Kept student data in PostgreSQL with role-based access for staff.",
+      "Built by a team of five for the IT314 Software Development course, from requirements and use cases through to a working app.",
+      "The app covers registration, email OTP verification, applications, deadlines, exam questions and results.",
+      "My part was getting it to production: I set up the GitHub Actions workflow for the Django app, prepared the production settings, and deployed it to Heroku.",
     ],
-    outcome: "A single, auditable registration and verification flow that the exam team can run without spreadsheets.",
+    outcome: "A working registration and exam system shipped by the team, and my first experience taking a team project to production.",
   },
   {
     slug: "placebook",
+    kind: "personal",
     color: "green",
     title: "Placebook",
-    year: "2023", // ASSUMED year
-    summary: "MERN app where travellers share photos and locations of places they love.",
-    stack: ["MongoDB", "Express", "React", "Node.js"],
+    year: "2024",
+    summary: "A MERN app for sharing photos and locations of places you love: my first end-to-end JavaScript project.",
+    stack: ["MongoDB", "Express", "React", "Node.js", "Firebase Hosting"],
     image: placebook,
     live: "https://placebook.kmmenpara.xyz/",
-    // ASSUMED: case-study text.
-    problem: "Travel recommendations get lost in chat threads. I wanted one place to pin a spot, add a photo and share it.",
+    // ASSUMED: if Placebook started from a course, add a line saying what you built beyond it.
+    problem: "Travel recommendations get lost in chat threads. Placebook gives each place a page with a photo, an address and a map.",
     approach: [
-      "React front end with authentication and per-user place collections.",
-      "Express and Node.js API with image upload and location data stored in MongoDB.",
-      "Map previews so every place shows where it actually is.",
+      "React front end with sign-up, login and per-user collections of places.",
+      "Express and Node.js API with JWT authentication, image uploads and MongoDB storage.",
+      "Addresses are turned into map coordinates with the Google Geocoding API, so every place shows where it is.",
+      "Front end deployed on Firebase Hosting, with preview deploys on pull requests.",
     ],
-    outcome: "A full MERN app from auth to file uploads, and my first end-to-end JavaScript project.",
+    outcome: "A complete full-stack JavaScript app, from authentication and file uploads to deployment.",
   },
   {
     slug: "payme",
+    kind: "personal",
+    // Hidden until fixed: passwords must be hashed (not encrypted) and receipt downloads need an ownership check.
+    hidden: true,
     color: "amber",
     title: "PayMe",
-    year: "2023", // ASSUMED year
-    summary: "A Django payment-gateway service that other projects can plug into.",
-    stack: ["Python", "Django", "REST API"],
-    image: payme,
-    live: "https://paymentapi.kmmenpara.xyz/api/v1/",
-    // ASSUMED: case-study text.
-    problem: "Each of my projects needed payments, and wiring a gateway into every one of them was repetitive and risky.",
-    approach: [
-      "Built a standalone Django REST service that exposes payment operations through a versioned API.",
-      "Other apps call the API instead of talking to the gateway directly, so payment logic lives in one place.",
-    ],
-    outcome: "A reusable payment service with a stable /api/v1 contract that any project can call.",
-  },
-  {
-    slug: "learning-log",
-    color: "violet",
-    title: "Learning Log",
-    year: "2022", // ASSUMED year
-    summary: "A personal knowledge tracker for journaling what you learn, topic by topic.",
+    year: "2024",
+    summary: "Sign-up with email two-factor verification and PDF receipts, in Django.",
     stack: ["Python", "Django"],
-    source: "https://github.com/KevinMenpara/Learning-Log",
-    // ASSUMED: case-study text.
-    problem: "Notes from courses and tutorials end up scattered. I wanted a simple journal organised by topic.",
-    approach: [
-      "Django app with user accounts, topics and dated entries.",
-      "Each user sees only their own topics and entries.",
-    ],
-    outcome: "My first complete Django project, covering models, auth, forms and deployment.",
-  },
-  {
-    slug: "version-control",
-    color: "rose",
-    title: "Version Control System",
-    year: "2024", // ASSUMED year (built for Winter of Code 6.0)
-    summary: "A Git-style version control system written from scratch in Python.",
-    stack: ["Python", "Systems programming"],
-    source: "https://github.com/KevinMenpara/WoC_6.0_Systems_Programming_KevinMenpara",
-    // ASSUMED: case-study text.
-    problem: "Using Git every day is different from understanding it. Building one is the fastest way to learn how it works.",
-    approach: [
-      "Implemented content-addressed storage for file snapshots.",
-      "Added commits, history and change tracking on top of that store.",
-      "Built for the Winter of Code systems programming track.",
-    ],
-    outcome: "A working version control tool and a much deeper understanding of how Git stores history.",
+    image: payme,
+    source: "https://github.com/KevinMenpara/PaymentGateway",
+    problem: "Draft: describe the problem PayMe solves once the security fixes are in.",
+    approach: ["Email two-factor verification on sign-up and login.", "PDF receipts generated with ReportLab."],
+    outcome: "Draft.",
   },
 ];
+
+/** Only the projects shown on the site. */
+export const projects: Project[] = allProjects.filter((p) => !p.hidden);
 
 /* ───────────────────────── Routes at the end ───────────────────────── */
 
@@ -284,8 +358,25 @@ export const services: Service[] = [
   },
 ];
 
+/**
+ * Quotes from people you've worked with. The section appears once there is at
+ * least one. Example:
+ * { quote: "…", name: "Jane Doe", role: "Engineering lead", company: "Improwised Technology" }
+ */
+export const testimonials: Testimonial[] = [];
+
 /** Add posts here; the notes section appears once there is at least one. */
 export const notes: Note[] = [];
+
+export const education = [
+  {
+    title: "B.Tech in Information & Technology",
+    place: "DA-IICT, Gandhinagar",
+    when: "2021 – 2025",
+    detail: "First class with distinction. Batch representative and event coordinator.",
+  },
+  { title: "Higher secondary", place: "Lotus High School", when: "2019 – 2021", detail: "First class with distinction." },
+];
 
 export const skills = {
   Languages: ["Python", "C/C++", "JavaScript", "SQL"],

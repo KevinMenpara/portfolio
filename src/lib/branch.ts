@@ -2,6 +2,7 @@ import type { BranchColor } from "@/content/profile";
 
 /** Text, background and border classes for each branch colour. */
 export const branch: Record<BranchColor, { text: string; bg: string; border: string; stroke: string }> = {
+  main: { text: "text-ink", bg: "bg-ink", border: "border-ink", stroke: "var(--ink)" },
   blue: { text: "text-blue", bg: "bg-blue", border: "border-blue", stroke: "var(--blue)" },
   green: { text: "text-green", bg: "bg-green", border: "border-green", stroke: "var(--green)" },
   amber: { text: "text-amber", bg: "bg-amber", border: "border-amber", stroke: "var(--amber)" },
